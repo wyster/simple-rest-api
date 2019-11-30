@@ -2,15 +2,16 @@ version: "3"
 services:
     php:
         restart: on-failure
-        build: php
+        build: ../php
         tty: true
         depends_on:
             - db
+            - web
         env_file:
             - ./.env
         volumes:
             - ./php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-            - ..:/var/www/html
+            - ../..:/var/www/html
     db:
         restart: on-failure
         image: postgres:alpine
@@ -19,12 +20,14 @@ services:
         env_file:
             - ./.env
     web:
-        build: nginx
+        build: ../nginx
         volumes:
-            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-            - ..:/var/www/html
-        depends_on:
-            - php
+            - ../nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ../..:/var/www/html
         restart: on-failure
         env_file:
             - ./.env
+        networks:
+          default:
+            aliases:
+              - php
