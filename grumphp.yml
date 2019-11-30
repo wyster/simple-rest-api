@@ -1,0 +1,12 @@
+parameters:
+    git_dir: .
+    bin_dir: vendor/bin
+    tasks:
+        securitychecker: ~
+        php_cs_auto_fixerv2:
+            config: .php_cs.dist
+            allow_risky: true
+        git_commit_message:
+            enforce_capitalized_subject: false
+    extensions:
+        - Wearejust\GrumPHPExtra\Extension\Loader
