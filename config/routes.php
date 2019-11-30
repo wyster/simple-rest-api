@@ -16,4 +16,19 @@ return static function (RouteCollector $r) {
         '/json/{name}',
         [Controller\HelloController::class, 'jsonAction']
     );
+    $r->addRoute(
+        'GET',
+        '/product',
+        [Controller\ProductController::class, 'fetchAllAction']
+    );
+    $r->addRoute(
+        'PUT',
+        '/order',
+        [Controller\OrderController::class, 'createAction']
+    );
+    $r->addRoute(
+        'PUT',
+        '/order/pay',
+        [Controller\OrderController::class, 'payAction']
+    );
 };

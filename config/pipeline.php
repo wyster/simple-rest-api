@@ -12,7 +12,10 @@ use Zend\Stratigility\MiddlewarePipeInterface;
  */
 return function (MiddlewarePipeInterface $app, ContainerInterface $container): void {
     $app->pipe($container->get(ErrorHandler::class));
+
     $app->pipe($container->get(Middlewares\FastRoute::class));
+    $app->pipe($container->get(Middlewares\JsonPayload::class));
     $app->pipe($container->get(ContentTypeMiddleware::class));
+
     $app->pipe($container->get(App\Middleware\RequestHandler::class));
 };

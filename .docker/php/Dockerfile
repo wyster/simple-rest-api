@@ -10,7 +10,9 @@ RUN apt update && apt install -y \
     # for postgres
     libpq-dev \
     # zip
-    libzip-dev
+    libzip-dev \
+    # intl
+    zlib1g-dev libicu-dev g++
 
 # XDebug
 RUN pecl install xdebug && docker-php-ext-enable xdebug
@@ -19,7 +21,7 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN docker-php-ext-install pdo_pgsql pgsql
 
 # Other
-RUN docker-php-ext-install zip
+RUN docker-php-ext-install zip intl
 
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

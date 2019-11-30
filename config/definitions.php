@@ -6,14 +6,20 @@ use Lcobucci\ContentNegotiation\Formatter;
 use Middlewares\ContentType;
 use Psr\Container\ContainerInterface;
 use Zend\Db\Adapter\AdapterInterface as DbAdapterInterface;
+use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\TableGateway\TableGateway;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\StreamFactory;
 use Zend\HttpHandlerRunner\RequestHandlerRunner;
+use Zend\Hydrator\Aggregate\AggregateHydrator;
+use Zend\Hydrator\HydratorInterface;
 use Zend\Stratigility;
 use Zend\Stratigility\MiddlewarePipe;
 use Zend\HttpHandlerRunner\Emitter;
 use Zend\Stratigility\MiddlewarePipeInterface;
+use App\Model;
+use App\Entity;
 
 return [
     MiddlewarePipeInterface::class => DI\create(MiddlewarePipe::class),
@@ -37,9 +43,6 @@ return [
     Middlewares\FastRoute::class => static function (ContainerInterface $c) {
         $dispatcher = FastRoute\simpleDispatcher(include __DIR__ . '/routes.php');
         return new Middlewares\FastRoute($dispatcher);
-    },
-    Middlewares\RequestHandler::class => static function (ContainerInterface $c) {
-        return new Middlewares\RequestHandler($c);
     },
     App\Middleware\RequestHandler::class => static function (ContainerInterface $c) {
         return new  App\Middleware\RequestHandler($c);
@@ -82,5 +85,42 @@ return [
             'port' => getenv('DB_PORT'),
             'charset' => 'utf8'
         ]);
+    },
+    HydratorInterface::class => static function (ContainerInterface $c) {
+        $hydrator = new AggregateHydrator();
+
+        $hydrator->add($c->get(App\Hydrator\Product::class));
+        $hydrator->add($c->get(App\Hydrator\Order::class));
+        $hydrator->add($c->get(App\Hydrator\OrderPay::class));
+
+        return $hydrator;
+    },
+    Model\Product::class => static function (ContainerInterface $c) {
+        $rowObjectPrototype = new Entity\Product();
+        $resultSetPrototype = new HydratingResultSet();
+        $resultSetPrototype->setHydrator($c->get(HydratorInterface::class));
+        $resultSetPrototype->setObjectPrototype($rowObjectPrototype);
+        $tableGateway = new TableGateway(
+            'product',
+            $c->get(DbAdapterInterface::class),
+            null,
+            $resultSetPrototype
+        );
+
+        return new Model\Product($tableGateway);
+    },
+    Model\Order::class => static function (ContainerInterface $c) {
+        $rowObjectPrototype = new Entity\Order();
+        $resultSetPrototype = new HydratingResultSet();
+        $resultSetPrototype->setHydrator($c->get(HydratorInterface::class));
+        $resultSetPrototype->setObjectPrototype($rowObjectPrototype);
+        $tableGateway = new TableGateway(
+            'order',
+            $c->get(DbAdapterInterface::class),
+            null,
+            $resultSetPrototype
+        );
+
+        return new Model\Order($tableGateway);
     }
 ];

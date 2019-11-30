@@ -22,7 +22,7 @@ return [
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
-        'default_database' => $dbname,
+        'default_database' => Env::PRODUCTION,
         Env::PRODUCTION => [
             'adapter' => getenv('DB_CONNECTION'),
             'host' => getenv('DB_HOST'),
