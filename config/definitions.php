@@ -5,6 +5,7 @@ use Lcobucci\ContentNegotiation\ContentTypeMiddleware;
 use Lcobucci\ContentNegotiation\Formatter;
 use Middlewares\ContentType;
 use Psr\Container\ContainerInterface;
+use Zend\Db\Adapter\AdapterInterface as DbAdapterInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\StreamFactory;
@@ -70,5 +71,16 @@ return [
         ];
 
         return new ContentTypeMiddleware($contentType, $formatters, new StreamFactory());
+    },
+    DbAdapterInterface::class => static function (ContainerInterface $c) {
+        return new Zend\Db\Adapter\Adapter([
+            'driver' => 'Pdo_' . getenv('DB_CONNECTION'),
+            'host' => getenv('DB_HOST'),
+            'database' => getenv('DB_NAME'),
+            'username' => getenv('DB_USER'),
+            'password' => getenv('DB_PASSWORD'),
+            'port' => getenv('DB_PORT'),
+            'charset' => 'utf8'
+        ]);
     }
 ];

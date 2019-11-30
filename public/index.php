@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
-ini_set('display_errors', 'on');
-ini_set('error_reporting', -1);
+use App\Helper\Env;
 
 use Dotenv\Dotenv;
 use Psr\Container\ContainerInterface;
@@ -13,6 +12,13 @@ define('BASE_DIR', dirname(__DIR__));
 require BASE_DIR . '/vendor/autoload.php';
 
 Dotenv::create(BASE_DIR)->load();
+
+error_reporting(E_ALL);
+if (Env::isDebug()) {
+    error_reporting(-1);
+    ini_set('display_errors', 'on');
+    ini_set('display_startup_errors', 'on');
+}
 
 /**
  * @var ContainerInterface $container

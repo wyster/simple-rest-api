@@ -1,0 +1,8 @@
+version: "3"
+services:
+  db:
+    ports:
+      - ${DB_PORT}:5432
+  web:
+    ports:
+      - ${HTTP_PORT}:80

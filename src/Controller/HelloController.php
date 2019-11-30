@@ -6,14 +6,22 @@ use Fig\Http\Message\StatusCodeInterface;
 use Lcobucci\ContentNegotiation\UnformattedResponse;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Adapter\AdapterInterface;
 use Zend\Diactoros\Response;
 
 class HelloController
 {
-    public function indexAction(RequestInterface $request)
+    /**
+     * @param RequestInterface $request
+     * @param Adapter $db
+     * @return string
+     */
+    public function indexAction(RequestInterface $request, AdapterInterface $db)
     {
+        $now = $db->query('select now()')->execute()->current()['now'];
         $name = $request->getAttribute('name');
-        return "Hello {$name}!";
+        return "Hello {$name}, now: {$now}!";
     }
 
     public function jsonAction(RequestInterface $request): ResponseInterface
