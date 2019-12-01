@@ -9,8 +9,9 @@ services:
             - web
         env_file:
             - ./.env
+            - ./.env.tests
         volumes:
-            - ./php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - ../php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
             - ../..:/var/www/html
     db:
         restart: on-failure

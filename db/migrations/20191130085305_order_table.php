@@ -10,7 +10,7 @@ class OrderTable extends AbstractMigration
     public function change(): void
     {
         $this->table('order')
-            ->addColumn('user', AdapterInterface::PHINX_TYPE_INTEGER)
+            ->addColumn('user_id', AdapterInterface::PHINX_TYPE_INTEGER)
             ->addColumn('status', AdapterInterface::PHINX_TYPE_INTEGER, ['length' => 1])
             ->addColumn('products', AdapterInterface::PHINX_TYPE_JSON)
             ->save();

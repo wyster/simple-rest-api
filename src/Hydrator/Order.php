@@ -3,8 +3,10 @@
 namespace App\Hydrator;
 
 use App\Entity\Order as OrderEntity;
+use App\Enum\Status;
 use Zend\Hydrator\ClassMethodsHydrator;
 use Zend\Hydrator\HydratorInterface;
+use Zend\Hydrator\Strategy\ClosureStrategy;
 
 class Order implements HydratorInterface
 {
@@ -35,6 +37,22 @@ class Order implements HydratorInterface
     {
         if ($this->hydrator === null) {
             $hydrator = new ClassMethodsHydrator();
+            $hydrator->addStrategy('status', new ClosureStrategy(
+                function (Status $value) {
+                    return (int)$value->getValue();
+                },
+                function (int $value) {
+                    return new Status($value);
+                }
+            ));
+            $hydrator->addStrategy('products', new ClosureStrategy(
+                function (array $value) {
+                    return json_encode($value);
+                },
+                function (string $value) {
+                    return json_decode($value, true);
+                }
+            ));
 
             $this->hydrator = $hydrator;
         }

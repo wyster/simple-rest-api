@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Helper\Env;
 use FastRoute\RouteCollector;
 use App\Controller;
+use Fig\Http\Message\StatusCodeInterface;
 
 return static function (RouteCollector $r) {
     $r->addRoute(
@@ -31,4 +33,10 @@ return static function (RouteCollector $r) {
         '/order/pay',
         [Controller\OrderController::class, 'payAction']
     );
+
+    if (Env::isTesting()) {
+        $r->addRoute(['GET', 'POST'], '/c3/{name:.+}', function () {
+            return (new Zend\Diactoros\Response())->withStatus(StatusCodeInterface::STATUS_OK);
+        });
+    }
 };

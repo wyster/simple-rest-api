@@ -94,15 +94,19 @@ class RequestHandler implements MiddlewareInterface
         }
 
         if (is_callable($requestHandler)) {
-            $func = function () use ($requestHandler, $request) {
-                return $this->container->call(
-                    [
-                        $requestHandler[0],
-                        $requestHandler[1],
-                    ],
-                    [$request]
-                );
-            };
+            if (is_array($requestHandler)) {
+                $func = function () use ($requestHandler, $request) {
+                    return $this->container->call(
+                        [
+                            $requestHandler[0],
+                            $requestHandler[1],
+                        ],
+                        [$request]
+                    );
+                };
+            } else {
+                $func = $requestHandler;
+            }
 
             return (new CallableHandler($func))->process($request, $handler);
         }

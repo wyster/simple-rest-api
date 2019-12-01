@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Enum\Status;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Lcobucci\ContentNegotiation\UnformattedResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -18,17 +19,19 @@ class OrderController
     {
         $order = new Entity\Order();
         $hydrator->hydrate($request->getParsedBody(), $order);
-        $order->setUserId(2);
+        $order->setUserId(1);
         $order->setStatus(Status::UNKNOWN());
 
-        $model->create($order);
+        if (!$model->create($order)) {
+            throw new Exception('Row not created');
+        }
 
         $response = (new Response())
-            ->withStatus(StatusCodeInterface::STATUS_OK)
+            ->withStatus(StatusCodeInterface::STATUS_CREATED)
             ->withHeader('Content-type', 'application/json');
         return new UnformattedResponse(
             $response,
-            $hydrator->extract($order)
+            ['id' => $order->getId()]
         );
     }
 
@@ -47,7 +50,7 @@ class OrderController
             ->withHeader('Content-type', 'application/json');
         return new UnformattedResponse(
             $response,
-            $hydrator->extract($order)
+            []
         );
     }
 }

@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
 use App\Helper\Env;
+use Fig\Http\Message\StatusCodeInterface;
 use Lcobucci\ContentNegotiation\ContentTypeMiddleware;
 use Lcobucci\ContentNegotiation\Formatter;
+use Lcobucci\ContentNegotiation\UnformattedResponse;
 use Middlewares\ContentType;
 use Psr\Container\ContainerInterface;
 use Zend\Db\Adapter\AdapterInterface as DbAdapterInterface;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
@@ -20,6 +23,7 @@ use Zend\HttpHandlerRunner\Emitter;
 use Zend\Stratigility\MiddlewarePipeInterface;
 use App\Model;
 use App\Entity;
+use Zend\Db\TableGateway\Feature;
 
 return [
     MiddlewarePipeInterface::class => DI\create(MiddlewarePipe::class),
@@ -29,14 +33,20 @@ return [
         return $stack;
     },
     Emitter\EmitterInterface::class => Di\get(Emitter\EmitterStack::class),
+    ServerRequestFactory::class => [ServerRequestFactory::class, 'fromGlobals'],
     RequestHandlerRunner::class => static function (ContainerInterface $c) {
-        $serverRequestFactory = [ServerRequestFactory::class, 'fromGlobals'];
         return new RequestHandlerRunner(
             $c->get(MiddlewarePipeInterface::class),
             $c->get(Emitter\EmitterInterface::class),
-            $serverRequestFactory,
+            $c->get(ServerRequestFactory::class),
             static function (Throwable $e) {
-                // @todo handler
+                $response = (new Response())
+                    ->withStatus(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)
+                    ->withHeader('Content-type', 'application/json');
+                return new UnformattedResponse(
+                    $response,
+                    $e->getMessage()
+                );
             }
         );
     },
@@ -45,7 +55,7 @@ return [
         return new Middlewares\FastRoute($dispatcher);
     },
     App\Middleware\RequestHandler::class => static function (ContainerInterface $c) {
-        return new  App\Middleware\RequestHandler($c);
+        return new App\Middleware\RequestHandler($c);
     },
     Stratigility\Middleware\ErrorHandler::class => static function (ContainerInterface $e) {
         return new Stratigility\Middleware\ErrorHandler(
@@ -101,9 +111,9 @@ return [
         $resultSetPrototype->setHydrator($c->get(HydratorInterface::class));
         $resultSetPrototype->setObjectPrototype($rowObjectPrototype);
         $tableGateway = new TableGateway(
-            'product',
+            new TableIdentifier('product', 'public'),
             $c->get(DbAdapterInterface::class),
-            null,
+            new Feature\SequenceFeature('id', 'product_id_seq'),
             $resultSetPrototype
         );
 
@@ -114,10 +124,11 @@ return [
         $resultSetPrototype = new HydratingResultSet();
         $resultSetPrototype->setHydrator($c->get(HydratorInterface::class));
         $resultSetPrototype->setObjectPrototype($rowObjectPrototype);
+
         $tableGateway = new TableGateway(
-            'order',
+            new TableIdentifier('order', 'public'),
             $c->get(DbAdapterInterface::class),
-            null,
+            new Feature\SequenceFeature('id', 'order_id_seq'),
             $resultSetPrototype
         );
 

@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Entity\Order as Entity;
+use Exception;
 
 class Order extends AbstractModel
 {
@@ -16,9 +17,22 @@ class Order extends AbstractModel
         return $result ?: null;
     }
 
-    public function create(Entity $order): bool
+    public function create(Entity $entity): bool
     {
-        $order->setId(1);
+        $data = $this->getHydrator()->extract($entity);
+        unset($data['id']);
+        $added = $this->getTableGateway()->insert($data);
+
+        if (!$added) {
+            return false;
+        }
+
+        $id = (int)$this->getTableGateway()->getLastInsertValue();
+        if ($id === 0) {
+            throw new Exception('Id need be > 0');
+        }
+        $entity->setId($id);
+
         return true;
     }
 }

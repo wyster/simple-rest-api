@@ -7,7 +7,7 @@ use Money\Money;
 class Product extends AbstractEntity
 {
     /**
-     * @var int
+     * @var null|int
      */
     private $id;
 
@@ -22,9 +22,9 @@ class Product extends AbstractEntity
     private $price;
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

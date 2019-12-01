@@ -36,4 +36,9 @@ setup:
 	@ln -sf $(PWD)/../.env $(PWD)/.env
 
 run: up
+	@docker-compose exec php ./vendor/bin/phinx migrate
 	@docker-compose exec php ./vendor/bin/codecept run
+
+coverage: up
+	@docker-compose exec php ./vendor/bin/phinx migrate
+	@docker-compose exec php ./vendor/bin/codecept run --coverage
