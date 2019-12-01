@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use Fig\Http\Message\StatusCodeInterface;
-use Lcobucci\ContentNegotiation\UnformattedResponse;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
@@ -15,12 +13,6 @@ class ProductController
     {
         $result = $model->getAll()->toArray();
 
-        $response = (new Response())
-            ->withStatus(StatusCodeInterface::STATUS_OK)
-            ->withHeader('Content-type', 'application/json');
-        return new UnformattedResponse(
-            $response,
-            $result
-        );
+        return new Response\JsonResponse($result);
     }
 }

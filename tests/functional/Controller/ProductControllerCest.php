@@ -7,6 +7,7 @@ use App\Model;
 use Exception;
 use Faker\Factory as Faker;
 use Fig\Http\Message\StatusCodeInterface;
+use Money\Currency;
 use Money\Money;
 
 use FunctionalTester;
@@ -26,7 +27,7 @@ class ProductControllerCest
 
         $product = new Entity\Product();
         $product->setTitle($faker->text());
-        $product->setPrice(Money::USD(10000));
+        $product->setPrice(new Money(10000, new Currency(getenv('CURRENCY'))));
 
         $model = $I->grabServiceFromContainer(Model\Product::class);
         if (!$model->create($product)) {

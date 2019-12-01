@@ -10,16 +10,6 @@ use Fig\Http\Message\StatusCodeInterface;
 return static function (RouteCollector $r) {
     $r->addRoute(
         'GET',
-        '/hello/{name}',
-        [Controller\HelloController::class, 'indexAction']
-    );
-    $r->addRoute(
-        'GET',
-        '/json/{name}',
-        [Controller\HelloController::class, 'jsonAction']
-    );
-    $r->addRoute(
-        'GET',
         '/product',
         [Controller\ProductController::class, 'fetchAllAction']
     );

@@ -4,7 +4,10 @@ namespace App\Model;
 
 use App\Entity\Product as Entity;
 use Exception;
+use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\Sql\Expression;
+use Zend\Db\Sql\Sql;
 
 class Product extends AbstractModel
 {
@@ -33,5 +36,21 @@ class Product extends AbstractModel
         $entity->setId($id);
 
         return true;
+    }
+
+    public function calculateTotalAmount(array $ids): ?int
+    {
+        /**
+         * @var Adapter $adapter
+         */
+        $adapter = $this->getTableGateway()->getAdapter();
+        $sql = new Sql($adapter);
+        $select = $sql->select($this->getTableGateway()->getTable())
+            ->columns(['amount' => new Expression('SUM(price)')])
+            ->where(['id' => $ids]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        return $result->current()['amount'];
     }
 }

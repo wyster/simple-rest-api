@@ -3,54 +3,49 @@
 namespace App\Controller;
 
 use App\Enum\Status;
-use Exception;
+use App\Exception\Order\OrderNotCreatedDomainException;
+use App\Service\Auth\IdentityInterface;
 use Fig\Http\Message\StatusCodeInterface;
-use Lcobucci\ContentNegotiation\UnformattedResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use App\Model;
+use App\Service;
 use App\Entity;
 use Zend\Hydrator\HydratorInterface;
 
 class OrderController
 {
-    public function createAction(ServerRequestInterface $request, HydratorInterface $hydrator, Model\Order $model): ResponseInterface
-    {
+    public function createAction(
+        ServerRequestInterface $request,
+        HydratorInterface $hydrator,
+        Model\Order $model,
+        IdentityInterface $auth
+    ): ResponseInterface {
+        // @todo валидация
         $order = new Entity\Order();
         $hydrator->hydrate($request->getParsedBody(), $order);
-        $order->setUserId(1);
+        $order->setUserId($auth->getId());
         $order->setStatus(Status::UNKNOWN());
 
         if (!$model->create($order)) {
-            throw new Exception('Row not created');
+            throw OrderNotCreatedDomainException::create();
         }
 
-        $response = (new Response())
-            ->withStatus(StatusCodeInterface::STATUS_CREATED)
-            ->withHeader('Content-type', 'application/json');
-        return new UnformattedResponse(
-            $response,
-            ['id' => $order->getId()]
-        );
+        return new Response\JsonResponse(['id' => $order->getId()], StatusCodeInterface::STATUS_CREATED);
     }
 
-    public function payAction(ServerRequestInterface $request, HydratorInterface $hydrator, Model\Order $model): ResponseInterface
-    {
-        $order = new Entity\OrderPay();
-        $hydrator->hydrate($request->getParsedBody(), $order);
+    public function payAction(
+        ServerRequestInterface $request,
+        HydratorInterface $hydrator,
+        Service\Order\OrderService $orderService
+    ): ResponseInterface {
+        // @todo валидация
+        $orderPay = new Entity\OrderPay();
+        $hydrator->hydrate($request->getParsedBody(), $orderPay);
 
-        if ($model->getById($order->getId()) === null) {
-            return (new Response())
-                ->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
-        }
+        $orderService->pay($orderPay);
 
-        $response = (new Response())
-            ->withStatus(StatusCodeInterface::STATUS_OK)
-            ->withHeader('Content-type', 'application/json');
-        return new UnformattedResponse(
-            $response,
-            []
-        );
+        return new Response\JsonResponse([]);
     }
 }

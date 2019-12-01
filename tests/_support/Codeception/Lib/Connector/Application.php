@@ -2,7 +2,6 @@
 
 namespace Codeception\Lib\Connector;
 
-use DI\Container;
 use Helper\ResponseEmitter;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\BrowserKit\AbstractBrowser as Client;
@@ -20,24 +19,24 @@ class Application extends Client
     use PhpSuperGlobalsConverter;
 
     /**
-     * @var ContainerInterface
+     * @var \App\Application
      */
-    private $container;
+    private $application;
 
     /**
-     * @param ContainerInterface $container
+     * @param \App\Application $application
      */
-    public function setContainer(ContainerInterface $container)
+    public function setApplication(\App\Application $application)
     {
-        $this->container = $container;
+        $this->application = $application;
     }
 
     /**
-     * @return Container
+     * @return \App\Application
      */
-    public function getContainer(): ContainerInterface
+    public function getApplication(): \App\Application
     {
-        return $this->container;
+        return $this->application;
     }
 
     /**
@@ -50,7 +49,7 @@ class Application extends Client
      */
     public function doRequest($request)
     {
-        $container = $this->getContainer();
+        $container = $this->getApplication()->getContainer();
         $container->set(
             Emitter\EmitterInterface::class,
             function () {
@@ -60,7 +59,7 @@ class Application extends Client
 
         $uri = $request->getUri();
         $pathString = parse_url($uri, PHP_URL_PATH);
-        $queryString = parse_url($uri, PHP_URL_QUERY);
+        $queryString = parse_url($uri, PHP_URL_QUERY) ?: '';
         $_SERVER = $request->getServer();
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_SERVER['REQUEST_URI'] = null === $queryString ? $pathString : $pathString . '?' . $queryString;
@@ -100,8 +99,7 @@ class Application extends Client
             };
         });
 
-        $handler = $container->make(RequestHandlerRunner::class);
-        $handler->run();
+        $this->getApplication()->run();
 
         $response = $container->get(Emitter\EmitterInterface::class)->getResponse();
         $status = $response->getStatusCode();

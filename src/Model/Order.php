@@ -3,7 +3,6 @@
 namespace App\Model;
 
 use App\Entity\Order as Entity;
-use Exception;
 
 class Order extends AbstractModel
 {
@@ -29,9 +28,18 @@ class Order extends AbstractModel
 
         $id = (int)$this->getTableGateway()->getLastInsertValue();
         if ($id === 0) {
-            throw new Exception('Id need be > 0');
+            return false;
         }
         $entity->setId($id);
+
+        return true;
+    }
+
+    public function update(?Entity $entity): bool
+    {
+        $data = $this->getHydrator()->extract($entity);
+        unset($data['id']);
+        $this->getTableGateway()->update($data, $entity->getId());
 
         return true;
     }

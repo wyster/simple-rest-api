@@ -46,10 +46,13 @@ class Order implements HydratorInterface
                 }
             ));
             $hydrator->addStrategy('products', new ClosureStrategy(
-                function (array $value) {
+                function ($value) {
                     return json_encode($value);
                 },
-                function (string $value) {
+                function ($value) {
+                    if (is_array($value)) {
+                        return $value;
+                    }
                     return json_decode($value, true);
                 }
             ));

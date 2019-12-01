@@ -13,6 +13,8 @@ help:
 	@echo "  logs                Follow logs"
 	@echo "  dump                Dump db data"
 	@echo "  restore-dump        Restore db data"
+	@echo "  tests               Run tests"
+	@echo "  coverage            Run code coverage"
 
 up: setup build
 	@docker-compose up -d
@@ -46,3 +48,9 @@ restore-dump:
 	@docker-compose up -d db
 	@docker-compose exec db bash /wait.sh
 	@docker exec -i $(CONTAINER_PREFIX)_db psql --dbname=postgres --username=$(POSTGRES_USER) < ./data/dump.sql
+
+tests:
+	@cd tests && make run
+
+coverage:
+	@cd tests && make coverage

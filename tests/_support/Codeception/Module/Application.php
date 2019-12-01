@@ -9,14 +9,15 @@ use Codeception\TestInterface;
 use DI\Container;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Connector\Application as ApplicationConnector;
+use Psr\Container\ContainerInterface;
 use Zend\Db\Adapter\AdapterInterface;
 
 class Application extends Framework
 {
     /**
-     * @var Container
+     * @var \App\Application
      */
-    private $container;
+    private $application;
 
     /**
      * Bootstrap file path
@@ -51,12 +52,12 @@ class Application extends Framework
     {
         /** @noinspection PhpIncludeInspection */
         $application = require $this->bootstrapFile;
-        $this->container = $application;
+        $this->application = $application;
 
-        $this->client->setContainer($this->container);
+        $this->client->setApplication($this->application);
 
-        if ($this->config['cleanup'] && $this->container->has(AdapterInterface::class)) {
-            $this->container->get(AdapterInterface::class)->getDriver()->getConnection()->beginTransaction();
+        if ($this->config['cleanup'] && $this->getContainer()->has(AdapterInterface::class)) {
+            $this->getContainer()->get(AdapterInterface::class)->getDriver()->getConnection()->beginTransaction();
             $this->debugSection('Database', 'Transaction started');
         }
     }
@@ -68,13 +69,13 @@ class Application extends Framework
      */
     public function _after(TestInterface $test)
     {
-        if ($this->config['cleanup'] && $this->container->has(AdapterInterface::class)) {
-            $db = $this->container->get(AdapterInterface::class);
+        if ($this->config['cleanup'] && $this->getContainer()->has(AdapterInterface::class)) {
+            $db = $this->getContainer()->get(AdapterInterface::class);
             $db->getDriver()->getConnection()->rollback();
             $this->debugSection('Database', 'Transaction cancelled; all changes reverted.');
             $db->getDriver()->getConnection()->disconnect();
         }
-        $this->container = null;
+        $this->application = null;
         $_SESSION = $_FILES = $_GET = $_POST = $_COOKIE = $_REQUEST = [];
     }
 
@@ -89,10 +90,10 @@ class Application extends Framework
      */
     public function grabServiceFromContainer($service, array $parameters = [])
     {
-        if (!$this->container->has($service)) {
+        if (!$this->getContainer()->has($service)) {
             $this->fail("Service $service is not available in container");
         }
-        return $this->container->make($service, $parameters);
+        return $this->getContainer()->make($service, $parameters);
     }
 
     /**
@@ -115,9 +116,22 @@ class Application extends Framework
     public function addServiceToContainer($name, $definition): void
     {
         try {
-            $this->container->set($name, $definition);
+            $this->getContainer()->set($name, $definition);
         } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
+    }
+
+    /**
+     * @return \App\Application
+     */
+    private function getApplication(): \App\Application
+    {
+        return $this->application;
+    }
+
+    private function getContainer(): ContainerInterface
+    {
+        return $this->getApplication()->getContainer();
     }
 }

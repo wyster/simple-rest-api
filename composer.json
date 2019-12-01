@@ -8,16 +8,18 @@
     "zendframework/zend-httphandlerrunner": "^1.1",
     "middlewares/fast-route": "^2.0",
     "php-di/php-di": "^6.0",
-    "middlewares/request-handler": "^2.0",
     "vlucas/phpdotenv": "^3.6",
-    "lcobucci/content-negotiation-middleware": "^2.1",
-    "middlewares/negotiation": "^2.0",
     "zendframework/zend-db": "^2.10",
     "zendframework/zend-hydrator": "^3.0",
     "myclabs/php-enum": "^1.7",
     "moneyphp/money": "^3.2",
     "zendframework/zend-eventmanager": "^3.2",
-    "middlewares/payload": "^3.0"
+    "middlewares/payload": "^3.0",
+    "zendframework/zend-problem-details": "^1.0",
+    "zendframework/zend-authentication": "^2.7",
+    "php-http/curl-client": "^2.0",
+    "php-http/message": "^1.8",
+    "php-http/guzzle6-adapter": "^2.0"
   },
   "require-dev": {
     "codeception/codeception": "^3.1",

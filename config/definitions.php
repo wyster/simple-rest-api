@@ -1,29 +1,28 @@
 <?php declare(strict_types=1);
 
-use App\Helper\Env;
 use Fig\Http\Message\StatusCodeInterface;
-use Lcobucci\ContentNegotiation\ContentTypeMiddleware;
-use Lcobucci\ContentNegotiation\Formatter;
-use Lcobucci\ContentNegotiation\UnformattedResponse;
-use Middlewares\ContentType;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Zend\Db\Adapter\AdapterInterface as DbAdapterInterface;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Diactoros\RequestFactory;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
-use Zend\Diactoros\StreamFactory;
 use Zend\HttpHandlerRunner\RequestHandlerRunner;
 use Zend\Hydrator\Aggregate\AggregateHydrator;
 use Zend\Hydrator\HydratorInterface;
-use Zend\Stratigility;
+use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 use Zend\Stratigility\MiddlewarePipe;
 use Zend\HttpHandlerRunner\Emitter;
 use Zend\Stratigility\MiddlewarePipeInterface;
 use App\Model;
 use App\Entity;
+use App\Service;
 use Zend\Db\TableGateway\Feature;
+use Zend\Authentication;
 
 return [
     MiddlewarePipeInterface::class => DI\create(MiddlewarePipe::class),
@@ -33,12 +32,11 @@ return [
         return $stack;
     },
     Emitter\EmitterInterface::class => Di\get(Emitter\EmitterStack::class),
-    ServerRequestFactory::class => [ServerRequestFactory::class, 'fromGlobals'],
     RequestHandlerRunner::class => static function (ContainerInterface $c) {
         return new RequestHandlerRunner(
             $c->get(MiddlewarePipeInterface::class),
             $c->get(Emitter\EmitterInterface::class),
-            $c->get(ServerRequestFactory::class),
+            [ServerRequestFactory::class, 'fromGlobals'],
             static function (Throwable $e) {
                 $response = (new Response())
                     ->withStatus(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)
@@ -56,34 +54,6 @@ return [
     },
     App\Middleware\RequestHandler::class => static function (ContainerInterface $c) {
         return new App\Middleware\RequestHandler($c);
-    },
-    Stratigility\Middleware\ErrorHandler::class => static function (ContainerInterface $e) {
-        return new Stratigility\Middleware\ErrorHandler(
-            static function () {
-                return new Response();
-            },
-            new Stratigility\Middleware\ErrorResponseGenerator(Env::isDebug())
-        );
-    },
-    ContentTypeMiddleware::class => static function (ContainerInterface $e) {
-        $contentType = new ContentType([
-            'json' => [
-                'extension' => ['json'],
-                'mime-type' => ['application/json', 'text/json', 'application/x-json'],
-                'charset' => true,
-            ],
-            'html' => [
-                'extension' => ['html', 'htm', 'php'],
-                'mime-type' => ['text/html', 'application/xhtml+xml'],
-                'charset' => true,
-            ],
-        ]);
-        $formatters = [
-            'application/json' => new Formatter\Json(),
-            'text/html' => new Formatter\StringCast(),
-        ];
-
-        return new ContentTypeMiddleware($contentType, $formatters, new StreamFactory());
     },
     DbAdapterInterface::class => static function (ContainerInterface $c) {
         return new Zend\Db\Adapter\Adapter([
@@ -133,5 +103,29 @@ return [
         );
 
         return new Model\Order($tableGateway);
-    }
+    },
+    ProblemDetailsResponseFactory::class => static function () {
+        return new ProblemDetailsResponseFactory(
+            function () {
+                return new Response();
+            }
+        );
+    },
+    Authentication\AuthenticationServiceInterface::class => static function () {
+        return new Authentication\AuthenticationService(
+            new Authentication\Storage\NonPersistent(),
+            new Authentication\Adapter\Callback(function () {
+                return new Service\Auth\FakeIdentity();
+            })
+        );
+    },
+    Service\Auth\IdentityInterface::class => static function (ContainerInterface $c) {
+        return $c->get(Authentication\AuthenticationServiceInterface::class)->getIdentity();
+    },
+    RequestFactoryInterface::class => Di\get(RequestFactory::class),
+    ClientInterface::class => function () {
+        return new \Http\Adapter\Guzzle6\Client(new GuzzleHttp\Client());
+    },
+    Service\Order\HttpService::class => DI\autowire()
+        ->constructorParameter('url', getenv('URL_FOR_PAY_POSSIBILITY_CHECK'))
 ];

@@ -7,4 +7,6 @@ modules:
     enabled:
         - Asserts
         - \Helper\Unit
+        - Application:
+            bootstrap: ./config/tests.php
     step_decorators: ~        
