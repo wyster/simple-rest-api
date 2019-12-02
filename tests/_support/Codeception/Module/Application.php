@@ -50,8 +50,10 @@ class Application extends Framework
      */
     public function _before(TestInterface $test)
     {
-        /** @noinspection PhpIncludeInspection */
         $application = require $this->bootstrapFile;
+        if (!$application instanceof \App\Application) {
+            throw new \Exception('Need ' . \App\Application::class . ' class instance');
+        }
         $this->application = $application;
 
         $this->client->setApplication($this->application);

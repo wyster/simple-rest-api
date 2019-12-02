@@ -63,13 +63,7 @@ class OrderPay extends AbstractValidator
                             return filter_var($id, FILTER_VALIDATE_INT);
                         },
                         'message' => 'Must be integer'
-                    ]),
-                    new Validator\Callback([
-                        'callback' => function (int $id) use ($modelOrder) {
-                            return $modelOrder->getById($id) === null;
-                        },
-                        'message' => 'Order not found in db'
-                    ]),
+                    ])
                 ],
             ]
         );

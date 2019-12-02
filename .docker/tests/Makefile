@@ -34,6 +34,7 @@ logs:
 
 setup:
 	@ln -sf $(PWD)/../.env $(PWD)/.env
+	@cp -n docker-compose.override.example.yml docker-compose.override.yml
 
 run: up
 	@docker-compose exec php ./vendor/bin/phinx migrate

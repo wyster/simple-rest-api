@@ -75,5 +75,17 @@ class OrderPayTest extends Unit
 
     public function testIsValid(): void
     {
+        $order = new Entity\Order();
+        $order->setUserId(1);
+        $data = ['id' => 1, 'amount' => 10];
+
+        $orderMock = $this->createMock(Model\Order::class);
+        $orderMock->method('getById')->willReturn($order);
+
+        $identityMock = $this->createMock(IdentityInterface::class);
+        $identityMock->method('getId')->willReturn($order->getUserId());
+
+        $validator = new Validator\OrderPay($orderMock, $identityMock);
+        $this->assertTrue($validator->isValid($data));
     }
 }
