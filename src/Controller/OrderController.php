@@ -2,16 +2,12 @@
 
 namespace App\Controller;
 
-use App\Enum\Status;
-use App\Exception\Order\OrderNotCreatedDomainException;
 use App\Exception\Order\OrderRequestInvalidDomainException;
-use App\Service\Auth\IdentityInterface;
+use App\Service\Order\OrderService;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
-use App\Model;
-use App\Service;
 use App\Entity;
 use App\Validator;
 use Zend\Hydrator\HydratorInterface;
@@ -21,22 +17,18 @@ class OrderController
     public function createAction(
         ServerRequestInterface $request,
         HydratorInterface $hydrator,
-        Model\Order $model,
-        IdentityInterface $identity,
+        OrderService $orderService,
         Validator\Order $validator
     ): ResponseInterface {
         $data = $request->getParsedBody();
         if (!$validator->isValid($data)) {
             throw OrderRequestInvalidDomainException::create(['validator' => $validator->getMessages()]);
         }
+
         $order = new Entity\Order();
         $hydrator->hydrate($data, $order);
-        $order->setUserId($identity->getId());
-        $order->setStatus(Status::UNKNOWN());
 
-        if (!$model->create($order)) {
-            throw OrderNotCreatedDomainException::create();
-        }
+        $orderService->create($order);
 
         return new Response\JsonResponse(['id' => $order->getId()], StatusCodeInterface::STATUS_CREATED);
     }
@@ -44,7 +36,7 @@ class OrderController
     public function payAction(
         ServerRequestInterface $request,
         HydratorInterface $hydrator,
-        Service\Order\OrderService $orderService,
+        OrderService $orderService,
         Validator\OrderPay $validator
     ): ResponseInterface {
         $data = $request->getParsedBody();

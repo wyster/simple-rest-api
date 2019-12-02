@@ -4,12 +4,14 @@ namespace App\Service\Order;
 
 use App\Entity;
 use App\Enum\Status;
+use App\Exception\Order\OrderNotCreatedDomainException;
 use App\Exception\Order\OrderNotFoundDomainException;
 use App\Exception\Order\OrderPayInvalidAmountDomainException;
 use App\Exception\Order\OrderPayImPossibleDomainException;
 use App\Model;
+use App\Service\Auth\IdentityInterface;
 use App\Service\Product\ProductService;
-use App\Service;
+use Psr\Http\Client\ClientExceptionInterface;
 
 class OrderService
 {
@@ -25,15 +27,31 @@ class OrderService
      * @var HttpService
      */
     private $httpService;
+    /**
+     * @var IdentityInterface
+     */
+    private $identity;
 
     public function __construct(
         Model\Order $modelOrder,
-        Service\Product\ProductService $productService,
-        HttpService $httpService
+        ProductService $productService,
+        HttpService $httpService,
+        IdentityInterface $identity
     ) {
         $this->modelOrder = $modelOrder;
         $this->productService = $productService;
         $this->httpService = $httpService;
+        $this->identity = $identity;
+    }
+
+    private function isItPossibleToPay(): bool
+    {
+        try {
+            return $this->httpService->checkTsItPossibleToPay();
+        } catch (ClientExceptionInterface $e) {
+        }
+
+        return false;
     }
 
     public function pay(Entity\OrderPay $orderPay): void
@@ -63,8 +81,13 @@ class OrderService
         $this->modelOrder->update($order);
     }
 
-    private function isItPossibleToPay(): bool
+    public function create(Entity\Order $order): void
     {
-        return $this->httpService->checkTsItPossibleToPay();
+        $order->setUserId($this->identity->getId());
+        $order->setStatus(Status::UNKNOWN());
+
+        if (!$this->modelOrder->create($order)) {
+            throw OrderNotCreatedDomainException::create();
+        }
     }
 }

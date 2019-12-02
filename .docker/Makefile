@@ -49,8 +49,8 @@ restore-dump:
 	@docker-compose exec db bash /wait.sh
 	@docker exec -i $(CONTAINER_PREFIX)_db psql --dbname=postgres --username=$(POSTGRES_USER) < ./data/dump.sql
 
-tests:
-	@cd tests && make run
+tests: setup
+	@cd ./tests && make run
 
-coverage:
-	@cd tests && make coverage
+coverage: setup
+	@cd ./tests && make coverage

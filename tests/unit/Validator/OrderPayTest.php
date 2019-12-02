@@ -10,7 +10,7 @@ use App\Validator;
 use App\Entity;
 use App\Model;
 
-class OrderTest extends Unit
+class OrderPayTest extends Unit
 {
     /**
      * @var UnitTester
