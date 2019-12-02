@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Enum\Status;
 use App\Exception\Order\OrderNotCreatedDomainException;
+use App\Exception\Order\OrderRequestInvalidDomainException;
 use App\Service\Auth\IdentityInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -12,6 +13,7 @@ use Zend\Diactoros\Response;
 use App\Model;
 use App\Service;
 use App\Entity;
+use App\Validator;
 use Zend\Hydrator\HydratorInterface;
 
 class OrderController
@@ -20,12 +22,16 @@ class OrderController
         ServerRequestInterface $request,
         HydratorInterface $hydrator,
         Model\Order $model,
-        IdentityInterface $auth
+        IdentityInterface $identity,
+        Validator\Order $validator
     ): ResponseInterface {
-        // @todo валидация
+        $data = $request->getParsedBody();
+        if (!$validator->isValid($data)) {
+            throw OrderRequestInvalidDomainException::create(['validator' => $validator->getMessages()]);
+        }
         $order = new Entity\Order();
-        $hydrator->hydrate($request->getParsedBody(), $order);
-        $order->setUserId($auth->getId());
+        $hydrator->hydrate($data, $order);
+        $order->setUserId($identity->getId());
         $order->setStatus(Status::UNKNOWN());
 
         if (!$model->create($order)) {
@@ -38,11 +44,15 @@ class OrderController
     public function payAction(
         ServerRequestInterface $request,
         HydratorInterface $hydrator,
-        Service\Order\OrderService $orderService
+        Service\Order\OrderService $orderService,
+        Validator\OrderPay $validator
     ): ResponseInterface {
-        // @todo валидация
+        $data = $request->getParsedBody();
+        if (!$validator->isValid($data)) {
+            throw OrderRequestInvalidDomainException::create(['validator' => $validator->getMessages()]);
+        }
         $orderPay = new Entity\OrderPay();
-        $hydrator->hydrate($request->getParsedBody(), $orderPay);
+        $hydrator->hydrate($data, $orderPay);
 
         $orderService->pay($orderPay);
 

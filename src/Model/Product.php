@@ -4,7 +4,6 @@ namespace App\Model;
 
 use App\Entity\Product as Entity;
 use Exception;
-use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Sql;
@@ -40,9 +39,6 @@ class Product extends AbstractModel
 
     public function calculateTotalAmount(array $ids): ?int
     {
-        /**
-         * @var Adapter $adapter
-         */
         $adapter = $this->getTableGateway()->getAdapter();
         $sql = new Sql($adapter);
         $select = $sql->select($this->getTableGateway()->getTable())
@@ -52,5 +48,18 @@ class Product extends AbstractModel
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
         return $result->current()['amount'];
+    }
+
+    public function isAllIdsExists(array $ids): bool
+    {
+        $adapter = $this->getTableGateway()->getAdapter();
+        $sql = new Sql($adapter);
+        $select = $sql->select($this->getTableGateway()->getTable())
+            ->columns(['count' => new Expression('COUNT(id)')])
+            ->where(['id' => $ids]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        return $result->current()['count'] === count($ids);
     }
 }

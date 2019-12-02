@@ -3,7 +3,6 @@
 namespace Controller;
 
 use App\Enum\Status;
-use App\Exception\Order\OrderNotFoundDomainException;
 use App\Exception\Order\OrderPayImPossibleDomainException;
 use App\Exception\Order\OrderPayInvalidAmountDomainException;
 use App\Model;
@@ -25,9 +24,11 @@ class OrderControllerCest
 {
     public function tryCreate(FunctionalTester $I): void
     {
+        $products = $this->createProducts($I);
+
         $I->haveHttpHeader('Content-type', 'application/json');
         $requestData = [
-            'products' => [1, 2, 3]
+            'products' => array_keys($products)
         ];
         $I->sendPUT('/order', json_encode($requestData));
         $I->seeResponseCodeIs(StatusCodeInterface::STATUS_CREATED);
@@ -54,52 +55,16 @@ class OrderControllerCest
         $I->assertSame($order->getProducts(), $requestData['products']);
     }
 
-    public function tryPayNotFound(FunctionalTester $I): void
-    {
-        $I->haveHttpHeader('Content-type', 'application/json');
-        $I->sendPut('/order/pay', '{"id":1,"amount":1000}');
-        $I->seeResponseCodeIs(OrderNotFoundDomainException::STATUS);
-        $I->canSeeHttpHeader('Content-type', ProblemDetailsResponseFactory::CONTENT_TYPE_JSON);
-        $I->canSeeResponseIsJson();
-        $content = $I->grabPageSource();
-        $data = json_decode($content, true);
-        $I->assertSame(OrderNotFoundDomainException::TITLE, $data['title']);
-        $I->assertSame(OrderNotFoundDomainException::TYPE, $data['type']);
-    }
-
     public function tryPaySuccess(FunctionalTester $I): void
     {
-        $faker = Faker::create(FAKER_LANG);
-
         $httpServiceMock = Stub::make(HttpService::class, [
             'checkTsItPossibleToPay' => true
         ]);
         $I->addServiceToContainer(HttpService::class, $httpServiceMock);
 
-        $model = $I->grabServiceFromContainer(Model\Product::class);
-        $products = [];
-        $totalAmount = 0;
-        for ($i = 0; $i < 5; $i++) {
-            $entity = new Entity\Product();
-            $entity->setTitle($faker->text());
-            $amount = 1000 + $i;
-            $entity->setPrice(new Money($amount, new Currency(getenv('CURRENCY'))));
-            if (!$model->create($entity)) {
-                throw new Exception('Row not created');
-            }
-            $products[$entity->getId()] = $entity;
-            $totalAmount += $amount;
-        }
-
-        $order = new Entity\Order();
-        $order->setStatus(Status::NEW());
-        $order->setUserId((new FakeIdentity())->getId());
-        $order->setProducts(array_keys($products));
-
-        $model = $I->grabServiceFromContainer(Model\Order::class);
-        if (!$model->create($order)) {
-            throw new Exception('Row not created');
-        }
+        $products = $this->createProducts($I);
+        $totalAmount = $this->calculateTotalAmount($products);
+        $order = $this->createOrder($I, $products);
 
         $I->haveHttpHeader('Content-type', 'application/json');
         $orderPayParams = [
@@ -113,7 +78,7 @@ class OrderControllerCest
         $content = $I->grabPageSource();
         $I->assertSame('[]', $content);
 
-        $updatedOrder = $model->getById($order->getId());
+        $updatedOrder = $I->grabServiceFromContainer(Model\Order::class)->getById($order->getId());
         $I->assertTrue($updatedOrder->getStatus()->equals(Status::PAYED()));
     }
 
@@ -157,37 +122,14 @@ class OrderControllerCest
 
     public function tryPayImpossible(FunctionalTester $I): void
     {
-        $faker = Faker::create(FAKER_LANG);
-
         $httpServiceMock = Stub::make(HttpService::class, [
             'checkTsItPossibleToPay' => false
         ]);
         $I->addServiceToContainer(HttpService::class, $httpServiceMock);
 
-        $model = $I->grabServiceFromContainer(Model\Product::class);
-        $products = [];
-        $totalAmount = 0;
-        for ($i = 0; $i < 5; $i++) {
-            $entity = new Entity\Product();
-            $entity->setTitle($faker->text());
-            $amount = 1000 + $i;
-            $entity->setPrice(new Money($amount, new Currency(getenv('CURRENCY'))));
-            if (!$model->create($entity)) {
-                throw new Exception('Row not created');
-            }
-            $products[$entity->getId()] = $entity;
-            $totalAmount += $amount;
-        }
-
-        $order = new Entity\Order();
-        $order->setStatus(Status::NEW());
-        $order->setUserId((new FakeIdentity())->getId());
-        $order->setProducts(array_keys($products));
-
-        $model = $I->grabServiceFromContainer(Model\Order::class);
-        if (!$model->create($order)) {
-            throw new Exception('Row not created');
-        }
+        $products = $this->createProducts($I);
+        $totalAmount = $this->calculateTotalAmount($products);
+        $order = $this->createOrder($I, $products);
 
         $I->haveHttpHeader('Content-type', 'application/json');
         $orderPayParams = [
@@ -202,5 +144,63 @@ class OrderControllerCest
         $data = json_decode($content, true);
         $I->assertSame(OrderPayImPossibleDomainException::TITLE, $data['title']);
         $I->assertSame(OrderPayImPossibleDomainException::TYPE, $data['type']);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     * @return array
+     * @throws Exception
+     */
+    public function createProducts(FunctionalTester $I): array
+    {
+        $faker = Faker::create(FAKER_LANG);
+
+        $modelProduct = $I->grabServiceFromContainer(Model\Product::class);
+        $products = [];
+        for ($i = 0; $i < 5; $i++) {
+            $entity = new Entity\Product();
+            $entity->setTitle($faker->text());
+            $entity->setPrice(new Money(1000, new Currency(getenv('CURRENCY'))));
+            if (!$modelProduct->create($entity)) {
+                throw new Exception('Row not created');
+            }
+            $products[$entity->getId()] = $entity;
+        }
+
+        return $products;
+    }
+
+    /**
+     * @param Entity\Product[] $products
+     * @return int
+     */
+    private function calculateTotalAmount(array $products): int
+    {
+        $totalAmount = 0;
+        foreach ($products as $product) {
+            $totalAmount += (int)$product->getPrice()->getAmount();
+        }
+
+        return $totalAmount;
+    }
+
+    /**
+     * @param FunctionalTester $I
+     * @param array $products
+     * @return Entity\Order
+     * @throws Exception
+     */
+    private function createOrder(FunctionalTester $I, array $products): Entity\Order
+    {
+        $order = new Entity\Order();
+        $order->setStatus(Status::NEW());
+        $order->setUserId((new FakeIdentity())->getId());
+        $order->setProducts(array_keys($products));
+
+        $model = $I->grabServiceFromContainer(Model\Order::class);
+        if (!$model->create($order)) {
+            throw new Exception('Row not created');
+        }
+        return $order;
     }
 }

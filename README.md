@@ -51,7 +51,7 @@ curl -X PUT \
   -d '{"products": [$PRODUCT_IDS]}'
 ```
 
-Где `$PRODUCT_IDS` - список идентификаторов через запятую, тип integer
+Где `$PRODUCT_IDS` - список идентификаторов (тип integer) через запятую
 
 
 * Оплата заказа
