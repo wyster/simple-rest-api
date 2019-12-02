@@ -5,4 +5,6 @@ if [ $COMPOSER_INSTALL == "1" ]; then
     composer install
 fi
 
+./vendor/bin/phinx migrate
+
 docker-php-entrypoint php-fpm
