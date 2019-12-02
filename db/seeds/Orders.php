@@ -4,6 +4,7 @@ namespace App\Db\Seeds;
 
 use App\Enum\Status;
 use App\Service\Auth\FakeIdentity;
+use Exception;
 use Phinx\Seed\AbstractSeed;
 
 class Orders extends AbstractSeed
@@ -17,6 +18,8 @@ class Orders extends AbstractSeed
 
     public function run(): void
     {
+        // @todo нужно создавать так же связи в product_orders
+        throw new Exception('Not fully implemented!');
         $data = [];
         for ($i = 0; $i < 5; $i++) {
             $ids = array_column(
