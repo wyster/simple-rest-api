@@ -39,7 +39,7 @@ class Order extends AbstractModel
     {
         $data = $this->getHydrator()->extract($entity);
         unset($data['id']);
-        $this->getTableGateway()->update($data, $entity->getId());
+        $this->getTableGateway()->update($data, ['id = ?' => $entity->getId()]);
 
         return true;
     }
