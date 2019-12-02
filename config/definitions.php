@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use App\Helper\Env;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -108,7 +109,10 @@ return [
         return new ProblemDetailsResponseFactory(
             function () {
                 return new Response();
-            }
+            },
+            Env::isDebug(),
+            null,
+            Env::isDebug()
         );
     },
     Authentication\AuthenticationServiceInterface::class => static function () {

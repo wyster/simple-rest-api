@@ -20,40 +20,47 @@ trait CommonProblemDetailsExceptionTrait
      */
     public function getDetail(): string
     {
-        if ($this instanceof Throwable) {
-            return $this->createDetailFromException();
-        }
+        return $this->getMessage();
+    }
 
-        return $this->detail;
+    public function getAdditionalData(): array
+    {
+        $detail = Env::isDebug() && $this instanceof Throwable ? $this->createThrowableDetail($this) : [];
+        return array_merge($this->additional, $detail);
     }
 
     /**
-     * Port from ZF\ApiProblem::createDetailFromException
-     * @see https://github.com/zfcampus/zf-api-problem/blob/master/src/ApiProblem.php#L310
-     * Create detail message from an exception.
+     * @see \Zend\ProblemDetails\ProblemDetailsResponseFactory::createThrowableDetail
      *
-     * @return string
+     * @return array
      */
-    protected function createDetailFromException(): string
+    private function createThrowableDetail(Throwable $e): array
     {
-        if (!Env::isDebug()) {
-            return $this->getMessage();
-        }
-        $message = trim($this->getMessage());
-        $this->additional['trace'] = $this->getTrace();
+        $detail = [
+            'class' => get_class($e),
+            'code' => $e->getCode(),
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTrace(),
+        ];
+
         $previous = [];
-        $e = $this->getPrevious();
-        while ($e) {
+        while ($e = $e->getPrevious()) {
             $previous[] = [
-                'code' => (int)$e->getCode(),
-                'message' => trim($e->getMessage()),
+                'class' => get_class($e),
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
                 'trace' => $e->getTrace(),
             ];
-            $e = $e->getPrevious();
         }
-        if (count($previous)) {
-            $this->additional['exception_stack'] = $previous;
+
+        if (! empty($previous)) {
+            $detail['stack'] = $previous;
         }
-        return $message;
+
+        return ['exception' => $detail];
     }
 }

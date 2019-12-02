@@ -1,19 +1,80 @@
 # Запуск проекта
 
-Проект можно запустить через docker-compose, для этого нужно выполнить
+Проект можно запустить через docker-compose, для этого нужно
 
-`cd .docker && make up`
+* Перейти в директорию `.docker` : `cd .docker`
 
-Другие команды можно посмотреть выполнив
+* Запустить команду `make setup`
 
-`cd .docker && make`
+* Отредактировать `.env`, а именно порты по которым будет доступен веб сервер и бд
+
+```
+HTTP_PORT=80
+DB_PORT=543
+````
+
+* Запустить контейнеры
+
+`make up`
+
+* Проверить работу через `curl -v http://localhost:$HTTP_PORT`, либо в браузере, 
+статус ответа 200, в теле `Hello world!`
+
+* К базе можно подключиться по `localhost:$DB_PORT`, login: `root`, password: `1`
+
+* В корне проекта доступен файл `.env` в котором
+
+`APP_DEBUG=1` - режим дебага
+
+`CURRENCY=USD` - используемая валюта
+
+`URL_FOR_PAY_POSSIBILITY_CHECK=http://ya.ru` - урл по которому проверяет возможность совершения платежа
+
+Другие доступные команды можно посмотреть выполнив `make`
+
+# Доступные ресурсы и примеры запросов
+
+* Список всех товаров
+
+```
+curl -X GET \
+  http://localhost/product \
+  -H 'Content-Type: application/json'
+```
+
+* Создание заказа
+
+```
+curl -X PUT \
+  http://localhost/order \
+  -H 'Content-Type: application/json' \
+  -d '{"products": [$PRODUCT_IDS]}'
+```
+
+Где `$PRODUCT_IDS` - список идентификаторов через запятую, тип integer
+
+
+* Оплата заказа
+
+```
+curl -X PUT \
+  http://localhost/order/pay \
+  -H 'Content-Type: application/json' \
+  -d '{"id": $ID, "amount": $AMOUNT}'
+```
+
+Где `$ID` - идентификатор заказа, тип integer
+
+Где `$AMOUNT` - сумма заказа, тип integer
+
+
 
 # Генерация стартовых данных
 
 Продукты
 
-docker-compose exec php ./vendor/bin/phinx seed:run -s 'App\Db\Seeds\Products'
+`docker-compose exec php ./vendor/bin/phinx seed:run -s 'App\Db\Seeds\Products'`
 
 Заказы
 
-docker-compose exec php ./vendor/bin/phinx seed:run -s 'App\Db\Seeds\Orders'
+`docker-compose exec php ./vendor/bin/phinx seed:run -s 'App\Db\Seeds\Orders'`

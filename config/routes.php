@@ -10,6 +10,13 @@ use Fig\Http\Message\StatusCodeInterface;
 return static function (RouteCollector $r) {
     $r->addRoute(
         'GET',
+        '/',
+        function () {
+            return new Zend\Diactoros\Response\TextResponse('Hello world!');
+        }
+    );
+    $r->addRoute(
+        'GET',
         '/product',
         [Controller\ProductController::class, 'fetchAllAction']
     );
