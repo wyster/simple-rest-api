@@ -73,6 +73,7 @@ return [
         $hydrator->add($c->get(App\Hydrator\Product::class));
         $hydrator->add($c->get(App\Hydrator\Order::class));
         $hydrator->add($c->get(App\Hydrator\OrderPay::class));
+        $hydrator->add($c->get(App\Hydrator\ProductOrders::class));
 
         return $hydrator;
     },
@@ -131,5 +132,20 @@ return [
         return new \Http\Adapter\Guzzle6\Client(new GuzzleHttp\Client());
     },
     Service\Order\HttpService::class => DI\autowire()
-        ->constructorParameter('url', getenv('URL_FOR_PAY_POSSIBILITY_CHECK'))
+        ->constructorParameter('url', getenv('URL_FOR_PAY_POSSIBILITY_CHECK')),
+    Model\ProductOrders::class => static function (ContainerInterface $c) {
+        $rowObjectPrototype = new Entity\ProductOrders();
+        $resultSetPrototype = new HydratingResultSet();
+        $resultSetPrototype->setHydrator($c->get(HydratorInterface::class));
+        $resultSetPrototype->setObjectPrototype($rowObjectPrototype);
+
+        $tableGateway = new TableGateway(
+            new TableIdentifier('product_orders', 'public'),
+            $c->get(DbAdapterInterface::class),
+            new Feature\SequenceFeature('id', 'product_orders_id_seq'),
+            $resultSetPrototype
+        );
+
+        return new Model\ProductOrders($tableGateway);
+    },
 ];

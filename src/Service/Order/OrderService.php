@@ -31,17 +31,23 @@ class OrderService
      * @var IdentityInterface
      */
     private $identity;
+    /**
+     * @var Model\ProductOrders
+     */
+    private $modelProductOrders;
 
     public function __construct(
         Model\Order $modelOrder,
         ProductService $productService,
         HttpService $httpService,
-        IdentityInterface $identity
+        IdentityInterface $identity,
+        Model\ProductOrders $modelProductOrders
     ) {
         $this->modelOrder = $modelOrder;
         $this->productService = $productService;
         $this->httpService = $httpService;
         $this->identity = $identity;
+        $this->modelProductOrders = $modelProductOrders;
     }
 
     private function isItPossibleToPay(): bool
@@ -88,6 +94,14 @@ class OrderService
 
         if (!$this->modelOrder->create($order)) {
             throw OrderNotCreatedDomainException::create();
+        }
+
+        foreach ($order->getProducts() as $product) {
+            $productOrder = new Entity\ProductOrders();
+            $productOrder->setOrder($order->getId());
+            $productOrder->setProduct($product);
+            // @todo создавать одним запросом
+            $this->modelProductOrders->create($productOrder);
         }
     }
 }
