@@ -3,7 +3,6 @@
 namespace Validator;
 
 use Codeception\Test\Unit;
-use Exception;
 use Faker\Factory as Faker;
 use Money\Currency;
 use Money\Money;
@@ -59,9 +58,7 @@ class OrderTest extends Unit
             $entity = new Entity\Product();
             $entity->setTitle($faker->text());
             $entity->setPrice(new Money(1000, new Currency(getenv('CURRENCY'))));
-            if (!$modelProduct->create($entity)) {
-                throw new Exception('Row not created');
-            }
+            $modelProduct->create($entity);
             $products[$entity->getId()] = $entity;
         }
 

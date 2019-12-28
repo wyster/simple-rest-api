@@ -4,7 +4,6 @@ namespace Controller;
 
 use App\Entity;
 use App\Model;
-use Exception;
 use Faker\Factory as Faker;
 use Fig\Http\Message\StatusCodeInterface;
 use Money\Currency;
@@ -30,9 +29,7 @@ class ProductControllerCest
         $product->setPrice(new Money(10000, new Currency(getenv('CURRENCY'))));
 
         $model = $I->grabServiceFromContainer(Model\Product::class);
-        if (!$model->create($product)) {
-            throw new Exception('Row not created');
-        }
+        $model->create($product);
 
         $I->amOnPage('/product');
         $I->seeResponseCodeIs(StatusCodeInterface::STATUS_OK);

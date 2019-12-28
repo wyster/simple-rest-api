@@ -12,11 +12,11 @@ class OrderPay extends AbstractValidator
     /**
      * @var Model\Order
      */
-    private $modelOrder;
+    private Model\Order $modelOrder;
     /**
      * @var IdentityInterface
      */
-    private $identity;
+    private IdentityInterface $identity;
 
     public function __construct(Model\Order $modelOrder, IdentityInterface $identity)
     {

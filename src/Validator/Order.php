@@ -27,6 +27,9 @@ class Order extends AbstractValidator
                                 if (!filter_var($id, FILTER_VALIDATE_INT)) {
                                     return false;
                                 }
+                                if (!is_int($id)) {
+                                    return false;
+                                }
                             }
                             return true;
                         },

@@ -5,11 +5,14 @@ namespace Controller;
 use App\Enum\Status;
 use App\Exception\Order\OrderPayImPossibleDomainException;
 use App\Exception\Order\OrderPayInvalidAmountDomainException;
+use App\Exception\Order\OrderRequestInvalidDomainException;
 use App\Model;
 use App\Entity;
 use App\Service\Auth\FakeIdentity;
 use App\Service\Auth\IdentityInterface;
 use App\Service\Order\HttpService;
+use Closure;
+use Codeception\Example;
 use Codeception\Stub;
 use Exception;
 use Faker\Factory as Faker;
@@ -55,6 +58,48 @@ class OrderControllerCest
         $I->assertSame($order->getProducts(), $requestData['products']);
     }
 
+    public function createFailDataProvider(): array
+    {
+        return [
+            [
+                'requestData' => function (FunctionalTester $I) {
+                    $products = $this->createProducts($I);
+                    $ids = array_keys($products);
+                    foreach ($ids as &$item) {
+                        $item = (string)$item;
+                    }
+                    return ['products' => $ids];
+                }
+            ],
+            [
+                'requestData' => []
+            ],
+            [
+                'requestData' => ['products' => []]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createFailDataProvider
+     */
+    public function tryCreateFail(FunctionalTester $I, Example $example): void
+    {
+        $I->haveHttpHeader('Content-type', 'application/json');
+        $requestData = $example['requestData'];
+        if ($requestData instanceof Closure) {
+            $requestData = $requestData($I);
+        }
+        $I->sendPUT('/order', json_encode($requestData));
+        $I->seeResponseCodeIs(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $I->canSeeHttpHeader('Content-type', 'application/problem+json');
+        $I->canSeeResponseIsJson();
+        $content = $I->grabPageSource();
+        $data = json_decode($content, true);
+        $I->assertSame(OrderRequestInvalidDomainException::TITLE, $data['title']);
+        $I->assertArrayHasKey('validator', $data);
+    }
+
     public function tryPaySuccess(FunctionalTester $I): void
     {
         $httpServiceMock = Stub::make(HttpService::class, [
@@ -82,6 +127,35 @@ class OrderControllerCest
         $I->assertTrue($updatedOrder->getStatus()->equals(Status::PAYED()));
     }
 
+    public function payFailDataProvider(): array
+    {
+        return [
+            [
+                'requestData' => []
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider payFailDataProvider
+     */
+    public function tryPayFail(FunctionalTester $I, Example $example): void
+    {
+        $I->haveHttpHeader('Content-type', 'application/json');
+        $requestData = $example['requestData'];
+        if ($requestData instanceof Closure) {
+            $requestData = $requestData($I);
+        }
+        $I->sendPUT('/order/pay', json_encode($requestData));
+        $I->seeResponseCodeIs(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
+        $I->canSeeHttpHeader('Content-type', 'application/problem+json');
+        $I->canSeeResponseIsJson();
+        $content = $I->grabPageSource();
+        $data = json_decode($content, true);
+        $I->assertSame(OrderRequestInvalidDomainException::TITLE, $data['title']);
+        $I->assertArrayHasKey('validator', $data);
+    }
+
     public function tryPayConflict(FunctionalTester $I): void
     {
         $order = new Entity\Order();
@@ -92,9 +166,7 @@ class OrderControllerCest
         $currentAmount = 0;
 
         $model = $I->grabServiceFromContainer(Model\Order::class);
-        if (!$model->create($order)) {
-            throw new Exception('Row not created');
-        }
+        $model->create($order);
 
         $I->haveHttpHeader('Content-type', 'application/json');
         $requestAmount = 1000;
@@ -161,9 +233,7 @@ class OrderControllerCest
             $entity = new Entity\Product();
             $entity->setTitle($faker->text());
             $entity->setPrice(new Money(1000, new Currency(getenv('CURRENCY'))));
-            if (!$modelProduct->create($entity)) {
-                throw new Exception('Row not created');
-            }
+            $modelProduct->create($entity);
             $products[$entity->getId()] = $entity;
         }
 
@@ -198,9 +268,8 @@ class OrderControllerCest
         $order->setProducts(array_keys($products));
 
         $model = $I->grabServiceFromContainer(Model\Order::class);
-        if (!$model->create($order)) {
-            throw new Exception('Row not created');
-        }
+        $model->create($order);
+
         return $order;
     }
 }

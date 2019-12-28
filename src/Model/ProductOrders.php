@@ -3,26 +3,25 @@
 namespace App\Model;
 
 use App\Entity\ProductOrders as Entity;
-use Exception;
+use App\Exception\Order\ProductOrdersNotCreatedDomainException;
 
 class ProductOrders extends AbstractModel
 {
-    public function create(Entity $entity): bool
+    public function create(Entity $entity): void
     {
         $data = $this->getHydrator()->extract($entity);
         unset($data['id']);
         $added = $this->getTableGateway()->insert($data);
 
         if (!$added) {
-            return false;
+            throw ProductOrdersNotCreatedDomainException::create();
         }
 
         $id = (int)$this->getTableGateway()->getLastInsertValue();
         if ($id === 0) {
-            throw new Exception('Id need be > 0');
+            throw ProductOrdersNotCreatedDomainException::create();
         }
-        $entity->setId($id);
 
-        return true;
+        $entity->setId($id);
     }
 }

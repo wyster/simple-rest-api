@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Entity\Order as Entity;
+use App\Exception\Order\OrderNotCreatedDomainException;
 
 class Order extends AbstractModel
 {
@@ -16,23 +17,21 @@ class Order extends AbstractModel
         return $result ?: null;
     }
 
-    public function create(Entity $entity): bool
+    public function create(Entity $entity): void
     {
         $data = $this->getHydrator()->extract($entity);
         unset($data['id']);
         $added = $this->getTableGateway()->insert($data);
 
         if (!$added) {
-            return false;
+            throw OrderNotCreatedDomainException::create();
         }
 
         $id = (int)$this->getTableGateway()->getLastInsertValue();
         if ($id === 0) {
-            return false;
+            throw OrderNotCreatedDomainException::create();
         }
         $entity->setId($id);
-
-        return true;
     }
 
     public function update(?Entity $entity): bool

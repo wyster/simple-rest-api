@@ -6,8 +6,8 @@ use Zend\Validator;
 
 abstract class AbstractValidator
 {
-    private $fields = [];
-    private $messages = [];
+    private array $fields = [];
+    private array $messages = [];
 
     protected function addField(array $field): void
     {

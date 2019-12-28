@@ -4,7 +4,6 @@ namespace App\Service\Order;
 
 use App\Entity;
 use App\Enum\Status;
-use App\Exception\Order\OrderNotCreatedDomainException;
 use App\Exception\Order\OrderNotFoundDomainException;
 use App\Exception\Order\OrderPayInvalidAmountDomainException;
 use App\Exception\Order\OrderPayImPossibleDomainException;
@@ -18,23 +17,23 @@ class OrderService
     /**
      * @var Model\Order
      */
-    private $modelOrder;
+    private Model\Order $modelOrder;
     /**
      * @var ProductService
      */
-    private $productService;
+    private ProductService $productService;
     /**
      * @var HttpService
      */
-    private $httpService;
+    private HttpService $httpService;
     /**
      * @var IdentityInterface
      */
-    private $identity;
+    private IdentityInterface $identity;
     /**
      * @var Model\ProductOrders
      */
-    private $modelProductOrders;
+    private Model\ProductOrders $modelProductOrders;
 
     public function __construct(
         Model\Order $modelOrder,
@@ -92,9 +91,7 @@ class OrderService
         $order->setUserId($this->identity->getId());
         $order->setStatus(Status::UNKNOWN());
 
-        if (!$this->modelOrder->create($order)) {
-            throw OrderNotCreatedDomainException::create();
-        }
+        $this->modelOrder->create($order);
 
         foreach ($order->getProducts() as $product) {
             $productOrder = new Entity\ProductOrders();

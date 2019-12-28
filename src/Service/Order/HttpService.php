@@ -12,15 +12,15 @@ class HttpService
     /**
      * @var ClientInterface
      */
-    private $httpClient;
+    private ClientInterface $httpClient;
     /**
      * @var RequestFactoryInterface
      */
-    private $requestFactory;
+    private RequestFactoryInterface $requestFactory;
     /**
      * @var string
      */
-    private $url;
+    private string $url;
 
     public function __construct(string $url, ClientInterface $httpClient, RequestFactoryInterface $requestFactory)
     {
