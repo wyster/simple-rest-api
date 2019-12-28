@@ -4,7 +4,6 @@ namespace Model;
 
 use App\Enum\Status;
 use App\Exception\Order\OrderNotCreatedDomainException;
-use App\Hydrator\Order;
 use App\Model;
 use App\Entity;
 use App\Hydrator;
@@ -45,7 +44,7 @@ class OrderTest extends Unit
      * @dataProvider notCreatedExceptionDataProvider
      * @param Model\Order $model
      */
-    public function testNotCreatedException(Order $model): void
+    public function testNotCreatedException(Model\Order $model): void
     {
         $this->expectException(OrderNotCreatedDomainException::class);
 

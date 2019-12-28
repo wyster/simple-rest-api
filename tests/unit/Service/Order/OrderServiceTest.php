@@ -53,10 +53,10 @@ class OrderServiceTest extends Unit
     }
 
     private function createOrderService(
-        ?Order $modelOrder = null,
+        ?Model\Order $modelOrder = null,
         ?ProductService $productService = null,
         ?HttpService $httpService = null,
-        ?ProductOrders $modelProductOrders = null
+        ?Model\ProductOrders $modelProductOrders = null
     ): OrderService {
         return new OrderService(
             $modelOrder ?: $this->createMock(Model\Order::class),

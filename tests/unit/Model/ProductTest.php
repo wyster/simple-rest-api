@@ -67,7 +67,7 @@ class ProductTest extends Unit
      * @dataProvider notCreatedExceptionDataProvider
      * @param Model\Product $model
      */
-    public function testNotCreatedException(Product $model): void
+    public function testNotCreatedException(Model\Product $model): void
     {
         $this->expectException(ProductNotCreatedDomainException::class);
 

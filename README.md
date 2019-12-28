@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/wyster/simple-rest-api.svg?branch=master)](https://travis-ci.org/wyster/simple-rest-api)
+[![Coverage Status](https://coveralls.io/repos/github/wyster/simple-rest-api/badge.svg?branch=master)](https://coveralls.io/github/wyster/simple-rest-api?branch=master)
+
 # Запуск проекта
 
 Проект можно запустить через docker-compose, для этого нужно
