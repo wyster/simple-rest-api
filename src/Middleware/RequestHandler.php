@@ -22,17 +22,17 @@ class RequestHandler implements MiddlewareInterface
     /**
      * @var ContainerInterface Used to resolve the handlers
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * @var bool
      */
-    private $continueOnEmpty = false;
+    private bool $continueOnEmpty = false;
 
     /**
      * @var string Attribute name for handler reference
      */
-    private $handlerAttribute = 'request-handler';
+    private string $handlerAttribute = 'request-handler';
 
     /**
      * Set the resolver instance.

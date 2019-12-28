@@ -16,7 +16,7 @@ class ProductTest extends Unit
     /**
      * @var UnitTester
      */
-    protected $tester;
+    protected UnitTester $tester;
 
     protected function _before()
     {

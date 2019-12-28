@@ -9,9 +9,9 @@ use Zend\Hydrator\HydratorInterface;
 class ProductOrders implements HydratorInterface
 {
     /**
-     * @var HydratorInterface
+     * @var HydratorInterface|null
      */
-    protected $hydrator;
+    protected ?HydratorInterface $hydrator = null;
 
     public function hydrate(array $data, object $object)
     {

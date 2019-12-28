@@ -12,9 +12,9 @@ use Zend\Hydrator\Strategy\ClosureStrategy;
 class Product implements HydratorInterface
 {
     /**
-     * @var HydratorInterface
+     * @var HydratorInterface|null
      */
-    protected $hydrator;
+    protected ?HydratorInterface $hydrator = null;
 
     public function hydrate(array $data, object $object)
     {
