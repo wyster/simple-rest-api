@@ -7,17 +7,17 @@ class ProductOrders extends AbstractEntity
     /**
      * @var null|int
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @var int
      */
-    private $product;
+    private int $product;
 
     /**
      * @var int
      */
-    private $order;
+    private int $order;
 
     /**
      * @return int|null

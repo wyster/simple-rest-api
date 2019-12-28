@@ -9,17 +9,17 @@ class Product extends AbstractEntity
     /**
      * @var null|int
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @var string
      */
-    private $title;
+    private string $title;
 
     /**
      * @var Money
      */
-    private $price;
+    private Money $price;
 
     /**
      * @return null|int

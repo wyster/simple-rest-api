@@ -9,12 +9,12 @@ class OrderPay
     /**
      * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @var Money
      */
-    private $amount;
+    private Money $amount;
 
     /**
      * @return int

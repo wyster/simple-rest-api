@@ -9,22 +9,22 @@ class Order extends AbstractEntity
     /**
      * @var null|int
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @var int
      */
-    private $user_id;
+    private int $user_id;
 
     /**
      * @var Status
      */
-    private $status;
+    private Status $status;
 
     /**
      * @var array
      */
-    private $products = [];
+    private array $products = [];
 
     /**
      * @return null|int
