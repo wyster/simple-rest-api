@@ -7,9 +7,9 @@ use Money\Money;
 class OrderPay
 {
     /**
-     * @var int
+     * @var null|int
      */
-    private int $id;
+    private ?int $id = null;
 
     /**
      * @var Money

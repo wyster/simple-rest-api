@@ -9,14 +9,15 @@ class Product extends AbstractEntity
     /**
      * @var null|int
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @var string
      */
     private string $title;
 
-    /**
+    /**Entity/Product.php:29
+
      * @var Money
      */
     private Money $price;

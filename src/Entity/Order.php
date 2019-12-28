@@ -9,7 +9,7 @@ class Order extends AbstractEntity
     /**
      * @var null|int
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @var int
