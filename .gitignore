@@ -2,3 +2,4 @@ build
 vendor
 .env
 *.cache
+http-client.env.json

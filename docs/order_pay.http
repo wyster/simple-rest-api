@@ -1,0 +1,15 @@
+PUT http://{{host}}/order/pay
+Content-Type: application/json
+
+{
+    "id": 1,
+    "amount": 70601
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+###

@@ -4,8 +4,8 @@ services:
     restart: on-failure
     build:
       context: ./php
-        args:
-          PHP_VERSION: ${PHP_VERSION}
+      args:
+        PHP_VERSION: ${PHP_VERSION}
     tty: true
     depends_on:
       - db
