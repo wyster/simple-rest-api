@@ -50,19 +50,22 @@ class RequestHandler implements MiddlewareInterface
             $requestHandler[0] = $this->container->get($requestHandler[0]);
         }
 
-        if (is_callable($requestHandler) && is_array($requestHandler)) {
-            $func = function () use ($requestHandler, $request) {
-                if (!$this->container instanceof Container) {
-                    throw new Exception('Not support only PHP-DI/PHP-DI container');
-                }
-                return $this->container->call(
-                    [
-                        $requestHandler[0],
-                        $requestHandler[1],
-                    ],
-                    [$request]
-                );
-            };
+        if (is_callable($requestHandler)) {
+            $func = $requestHandler;
+            if (is_array($requestHandler)) {
+                $func = function () use ($requestHandler, $request) {
+                    if (!$this->container instanceof Container) {
+                        throw new Exception('Not support only PHP-DI/PHP-DI container');
+                    }
+                    return $this->container->call(
+                        [
+                            $requestHandler[0],
+                            $requestHandler[1],
+                        ],
+                        [$request]
+                    );
+                };
+            }
 
             return (new CallableHandler($func))->process($request, $handler);
         }
