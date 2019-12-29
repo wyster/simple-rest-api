@@ -27,11 +27,6 @@ class RequestHandler implements MiddlewareInterface
     private ContainerInterface $container;
 
     /**
-     * @var bool
-     */
-    private bool $continueOnEmpty = false;
-
-    /**
      * @var string Attribute name for handler reference
      */
     private string $handlerAttribute = 'request-handler';
@@ -45,73 +40,29 @@ class RequestHandler implements MiddlewareInterface
     }
 
     /**
-     * Set the attribute name to store handler reference.
-     */
-    public function handlerAttribute(string $handlerAttribute): self
-    {
-        $this->handlerAttribute = $handlerAttribute;
-
-        return $this;
-    }
-
-    /**
-     * Configure whether continue with the next handler if custom requestHandler is empty.
-     */
-    public function continueOnEmpty(bool $continueOnEmpty = true): self
-    {
-        $this->continueOnEmpty = $continueOnEmpty;
-
-        return $this;
-    }
-
-    /**
      * Process a server request and return a response.
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $requestHandler = $request->getAttribute($this->handlerAttribute);
 
-        if (empty($requestHandler)) {
-            if ($this->continueOnEmpty) {
-                return $handler->handle($request);
-            }
-
-            throw new RuntimeException('Empty request handler');
-        }
-
-        if (is_string($requestHandler)) {
-            $requestHandler = $this->container->get($requestHandler);
-        }
-
         if (is_array($requestHandler) && count($requestHandler) === 2 && is_string($requestHandler[0])) {
             $requestHandler[0] = $this->container->get($requestHandler[0]);
         }
 
-        if ($requestHandler instanceof MiddlewareInterface) {
-            return $requestHandler->process($request, $handler);
-        }
-
-        if ($requestHandler instanceof RequestHandlerInterface) {
-            return $requestHandler->handle($request);
-        }
-
-        if (is_callable($requestHandler)) {
-            if (is_array($requestHandler)) {
-                $func = function () use ($requestHandler, $request) {
-                    if (!$this->container instanceof Container) {
-                        throw new Exception('Not support only PHP-DI/PHP-DI container');
-                    }
-                    return $this->container->call(
-                        [
-                            $requestHandler[0],
-                            $requestHandler[1],
-                        ],
-                        [$request]
-                    );
-                };
-            } else {
-                $func = $requestHandler;
-            }
+        if (is_callable($requestHandler) && is_array($requestHandler)) {
+            $func = function () use ($requestHandler, $request) {
+                if (!$this->container instanceof Container) {
+                    throw new Exception('Not support only PHP-DI/PHP-DI container');
+                }
+                return $this->container->call(
+                    [
+                        $requestHandler[0],
+                        $requestHandler[1],
+                    ],
+                    [$request]
+                );
+            };
 
             return (new CallableHandler($func))->process($request, $handler);
         }
