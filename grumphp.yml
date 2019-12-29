@@ -1,7 +1,8 @@
 parameters:
-  git_dir: .
-  bin_dir: vendor/bin
+  git_hook_variables:
+    EXEC_GRUMPHP_COMMAND: 'docker-compose --project-directory=.docker -f .docker/docker-compose.yml run php'
   tasks:
+    codeception: ~
     securitychecker:
       metadata:
         blocking: false
@@ -12,6 +13,18 @@ parameters:
         priority: 300
     git_commit_message:
       enforce_capitalized_subject: false
+      type_scope_conventions:
+        - types:
+            - build
+            - ci
+            - chore
+            - docs
+            - feat
+            - fix
+            - perf
+            - refactor
+            - test
+        - scopes: []
     phpstan: ~
   extensions:
     - Wearejust\GrumPHPExtra\Extension\Loader

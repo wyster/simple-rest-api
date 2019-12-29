@@ -28,4 +28,4 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 ADD ./start.sh /start.sh
 RUN chmod +x /start.sh
-ENTRYPOINT /start.sh
+CMD /start.sh
