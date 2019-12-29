@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use Exception;
+use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\TableGateway\TableGatewayInterface;
 use Zend\Hydrator\HydratorInterface;
@@ -26,11 +28,19 @@ abstract class AbstractModel
      */
     protected function getHydrator(): HydratorInterface
     {
-        return $this->getTableGateway()->getResultSetPrototype()->getHydrator();
+        if (!method_exists($this->getTableGateway(), 'getResultSetPrototype')) {
+            throw new Exception('Method `getResultSetPrototype` not implemented');
+        }
+
+        $resultSet = $this->getTableGateway()->getResultSetPrototype();
+        if (!$resultSet instanceof HydratingResultSet) {
+            throw new Exception('Support only ' . HydratingResultSet::class);
+        }
+        return $resultSet->getHydrator();
     }
 
     /**
-     * @return TableGateway
+     * @return TableGateway|TableGatewayInterface
      */
     protected function getTableGateway(): TableGatewayInterface
     {

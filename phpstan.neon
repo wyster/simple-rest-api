@@ -1,6 +1,6 @@
 parameters:
   bootstrap: ./config/phpstan-bootstrap.php
-  level: 1
+  level: 5
   excludes_analyse:
   		- tests/*
   		- db/*
