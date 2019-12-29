@@ -13,7 +13,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - cd $TRAVIS_BUILD_DIR/.docker
+  - cd $TRAVIS_BUILD_DIR/.docker/tests
   - make setup
   - echo "TRAVIS_JOB_ID=$TRAVIS_JOB_ID" >> .env
   - echo "TRAVIS=true" >> .env
