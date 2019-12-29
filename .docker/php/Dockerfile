@@ -15,7 +15,7 @@ RUN apt update && apt install -y \
     zlib1g-dev libicu-dev g++
 
 # XDebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN pecl install xdebug
 
 # PostgreSQL
 RUN docker-php-ext-install pdo_pgsql pgsql

@@ -42,6 +42,7 @@ run: up
 	@docker-compose exec -T php ./vendor/bin/codecept run
 
 coverage: up
+	@docker-compose exec -T php docker-php-ext-enable xdebug
 	@docker-compose exec -T php ./vendor/bin/codecept run --coverage --coverage-xml
 
 coveralls:
