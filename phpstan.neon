@@ -1,3 +1,7 @@
 parameters:
   bootstrap: ./config/phpstan-bootstrap.php
   level: 1
+  excludes_analyse:
+  		- tests/*
+  		- db/*
+  		- .phpstorm.meta.php
