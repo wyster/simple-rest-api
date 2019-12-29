@@ -4,6 +4,8 @@ namespace App\Model;
 
 use App\Entity\Order as Entity;
 use App\Exception\Order\OrderNotCreatedDomainException;
+use Exception;
+use Zend\Db\ResultSet\HydratingResultSet;
 
 class Order extends AbstractModel
 {
@@ -13,7 +15,14 @@ class Order extends AbstractModel
      */
     public function getById(int $id): ?Entity
     {
-        $result = $this->getTableGateway()->select(['id' => $id])->current();
+        /**
+         * @var HydratingResultSet $resultSet
+         */
+        $resultSet = $this->getTableGateway()->select(['id' => $id]);
+        /**
+         * @var object|false $result
+         */
+        $result = $resultSet->current();
         return $result ?: null;
     }
 
@@ -25,6 +34,10 @@ class Order extends AbstractModel
 
         if (!$added) {
             throw OrderNotCreatedDomainException::create();
+        }
+
+        if (!method_exists($this->getTableGateway(), 'getLastInsertValue')) {
+            throw new Exception('Method `getLastInsertValue` not implemented');
         }
 
         $id = (int)$this->getTableGateway()->getLastInsertValue();

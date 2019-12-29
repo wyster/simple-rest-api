@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use DI\Container;
+use Exception;
 use Middlewares\Utils\CallableHandler;
 use Middlewares\Utils\RequestHandlerContainer;
 use Psr\Container\ContainerInterface;
@@ -97,6 +98,9 @@ class RequestHandler implements MiddlewareInterface
         if (is_callable($requestHandler)) {
             if (is_array($requestHandler)) {
                 $func = function () use ($requestHandler, $request) {
+                    if (!$this->container instanceof Container) {
+                        throw new Exception('Not support only PHP-DI/PHP-DI container');
+                    }
                     return $this->container->call(
                         [
                             $requestHandler[0],

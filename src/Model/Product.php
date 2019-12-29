@@ -4,16 +4,14 @@ namespace App\Model;
 
 use App\Entity\Product as Entity;
 use App\Exception\Order\ProductNotCreatedDomainException;
+use Exception;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Sql;
 
 class Product extends AbstractModel
 {
-    /**
-     * @return HydratingResultSet
-     */
-    public function getAll(): iterable
+    public function getAll(): HydratingResultSet
     {
         return $this->getTableGateway()->select();
     }
@@ -28,6 +26,10 @@ class Product extends AbstractModel
             throw ProductNotCreatedDomainException::create();
         }
 
+        if (!method_exists($this->getTableGateway(), 'getLastInsertValue')) {
+            throw new Exception('Method `getLastInsertValue` not implemented');
+        }
+
         $id = (int)$this->getTableGateway()->getLastInsertValue();
         if ($id === 0) {
             throw ProductNotCreatedDomainException::create();
@@ -38,6 +40,10 @@ class Product extends AbstractModel
 
     public function calculateTotalAmount(array $ids): ?int
     {
+        if (!method_exists($this->getTableGateway(), 'getAdapter')) {
+            throw new Exception('Method `getAdapter` not implemented');
+        }
+
         $adapter = $this->getTableGateway()->getAdapter();
         $sql = new Sql($adapter);
         $select = $sql->select($this->getTableGateway()->getTable())
@@ -51,6 +57,10 @@ class Product extends AbstractModel
 
     public function isAllIdsExists(array $ids): bool
     {
+        if (!method_exists($this->getTableGateway(), 'getAdapter')) {
+            throw new Exception('Method `getAdapter` not implemented');
+        }
+
         $adapter = $this->getTableGateway()->getAdapter();
         $sql = new Sql($adapter);
         $select = $sql->select($this->getTableGateway()->getTable())
