@@ -2,14 +2,13 @@
 
 use App\Application;
 use App\Helper\Env;
-
 use Dotenv\Dotenv;
 
 define('BASE_DIR', dirname(__DIR__));
 
 require BASE_DIR . '/vendor/autoload.php';
 
-Dotenv::create(BASE_DIR)->load();
+Dotenv::createImmutable(BASE_DIR)->load();
 
 error_reporting(E_ALL);
 if (Env::isDebug()) {

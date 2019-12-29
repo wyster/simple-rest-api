@@ -1,13 +1,14 @@
 <?php declare(strict_types=1);
 
 use App\Helper\Env;
+use Dotenv\Dotenv;
 
 error_reporting(-1);
 ini_set('display_errors', 'on');
 ini_set('display_startup_errors', 'on');
 
 require __DIR__ . '/vendor/autoload.php';
-(Dotenv\Dotenv::create(__DIR__))->load();
+Dotenv::createImmutable(__DIR__)->load();
 
 defined('FAKER_LANG') || define('FAKER_LANG', 'ru_RU');
 

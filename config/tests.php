@@ -10,7 +10,7 @@ defined('FAKER_LANG') || define('FAKER_LANG', 'ru_RU');
 
 require BASE_DIR . '/vendor/autoload.php';
 
-Dotenv::create(BASE_DIR)->load();
+Dotenv::createImmutable(BASE_DIR)->load();
 
 error_reporting(E_ALL);
 if (Env::isDebug()) {
