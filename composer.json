@@ -48,6 +48,9 @@
   "scripts": {
     "post-install-cmd": [
       "cp -n ./.env.example ./.env"
+    ],
+    "grumphp": [
+      "cd .docker/tests && make up"
     ]
   }
 }

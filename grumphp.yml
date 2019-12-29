@@ -1,6 +1,6 @@
 parameters:
   git_hook_variables:
-    EXEC_GRUMPHP_COMMAND: 'docker-compose --project-directory=.docker -f .docker/docker-compose.yml run php'
+    EXEC_GRUMPHP_COMMAND: 'cd .docker/tests && make up && docker-compose exec php'
   tasks:
     codeception: ~
     securitychecker:

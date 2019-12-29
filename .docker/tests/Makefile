@@ -15,7 +15,8 @@ help:
 
 up: setup build
 	@docker-compose up -d
-	@docker-compose exec web bash /wait-for.sh localhost:80 -t 0 -- echo "Webserver started"
+	@docker-compose exec -T web bash /wait-for.sh localhost:80 -t 0 -- echo "Webserver started"
+	@docker-compose exec -T php ./vendor/bin/phinx migrate
 
 build: setup
 	@docker-compose build
@@ -33,17 +34,20 @@ logs:
 	@docker-compose logs -f -t --tail=1000
 
 setup:
+	@cd .. && make setup
 	@ln -sf $(PWD)/../.env $(PWD)/.env
 	@cp -n docker-compose.override.example.yml docker-compose.override.yml
 
 run: up
-	@docker-compose exec php ./vendor/bin/phinx migrate
-	@docker-compose exec php ./vendor/bin/codecept run
+	@docker-compose exec -T php ./vendor/bin/codecept run
 
 coverage: up
-	@docker-compose exec php ./vendor/bin/phinx migrate
-	@docker-compose exec php ./vendor/bin/codecept run --coverage --coverage-xml
+	@docker-compose exec -T php ./vendor/bin/codecept run --coverage --coverage-xml
 
 coveralls:
-	@docker-compose exec php mkdir -p ./build/logs
-	@docker-compose exec php ./vendor/bin/php-coveralls -v --coverage_clover=./tests/_output/coverage.xml;
+	@docker-compose exec -T php mkdir -p ./build/logs
+	@docker-compose exec -T php ./vendor/bin/php-coveralls -v --coverage_clover=./tests/_output/coverage.xml
+
+grumphp: up
+	@docker-compose exec -T php ./vendor/bin/phinx migrate
+	@docker-compose exec -T php ./vendor/bin/grumphp run
