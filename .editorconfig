@@ -7,5 +7,5 @@ indent_size = 4
 indent_style = space
 insert_final_newline = true
 
-[*.{json,yml}]
+[*.{json,yml,neon}]
 indent_size = 2

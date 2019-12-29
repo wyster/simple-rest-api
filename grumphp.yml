@@ -2,11 +2,16 @@ parameters:
   git_dir: .
   bin_dir: vendor/bin
   tasks:
-    securitychecker: ~
+    securitychecker:
+      metadata:
+        blocking: false
     php_cs_auto_fixerv2:
       config: .php_cs.dist
       allow_risky: true
+      metadata:
+        priority: 300
     git_commit_message:
       enforce_capitalized_subject: false
+    phpstan: ~
   extensions:
     - Wearejust\GrumPHPExtra\Extension\Loader

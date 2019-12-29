@@ -11,7 +11,7 @@ abstract class AbstractModel
     /**
      * @var TableGatewayInterface
      */
-    protected $tableGateway;
+    private TableGatewayInterface $tableGateway;
 
     /**
      * @param TableGatewayInterface $tableGateway

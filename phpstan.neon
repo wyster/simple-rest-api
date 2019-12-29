@@ -1,0 +1,3 @@
+parameters:
+  bootstrap: ./config/phpstan-bootstrap.php
+  level: 1

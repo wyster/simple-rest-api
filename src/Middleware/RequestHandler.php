@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use DI\Container;
 use Middlewares\Utils\CallableHandler;
 use Middlewares\Utils\RequestHandlerContainer;
 use Psr\Container\ContainerInterface;
@@ -20,7 +21,7 @@ use RuntimeException;
 class RequestHandler implements MiddlewareInterface
 {
     /**
-     * @var ContainerInterface Used to resolve the handlers
+     * @var Container|ContainerInterface
      */
     private ContainerInterface $container;
 

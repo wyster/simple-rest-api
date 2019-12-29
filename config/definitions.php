@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use App\Helper\Env;
-use Fig\Http\Message\StatusCodeInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -39,13 +38,8 @@ return [
             $c->get(Emitter\EmitterInterface::class),
             [ServerRequestFactory::class, 'fromGlobals'],
             static function (Throwable $e) {
-                $response = (new Response())
-                    ->withStatus(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR)
-                    ->withHeader('Content-type', 'application/json');
-                return new UnformattedResponse(
-                    $response,
-                    $e->getMessage()
-                );
+                // @todo response
+                throw $e;
             }
         );
     },
