@@ -1,4 +1,8 @@
 {
+  "name": "wyster/simple-rest-api",
+  "description": "Simple REST API based on PHP 7.4, middleware and other PSRs",
+  "type": "project",
+  "license": "MIT",
   "require": {
     "php": ">=7.4",
     "ext-intl": "*",
