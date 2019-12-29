@@ -13,8 +13,9 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - cd $TRAVIS_BUILD_DIR/.docker/tests
+  - cd $TRAVIS_BUILD_DIR/.docker
   - make setup
+  - cd $TRAVIS_BUILD_DIR/.docker/tests
   - echo "TRAVIS_JOB_ID=$TRAVIS_JOB_ID" >> .env
   - echo "TRAVIS=true" >> .env
   - echo "COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN" >> .env
