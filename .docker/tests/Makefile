@@ -43,7 +43,7 @@ run: up
 coverage: up
 	@docker-compose exec php ./vendor/bin/phinx migrate
 	@docker-compose exec php ./vendor/bin/codecept run --coverage --coverage-xml
-	@if [ ! -z "${TRAVIS}" ]; then \
-	 	docker-compose exec php mkdir -p ./build/logs && \
-		docker-compose exec php ./vendor/bin/php-coveralls -v --coverage_clover=./tests/_output/coverage.xml; \
-	fi
+
+coveralls:
+	@docker-compose exec php mkdir -p ./build/logs
+	@docker-compose exec php ./vendor/bin/php-coveralls -v --coverage_clover=./tests/_output/coverage.xml;

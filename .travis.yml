@@ -21,3 +21,6 @@ script:
   - echo "CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER" >> .env
   - echo "CI_BRANCH=$TRAVIS_BRANCH" >> .env
   - make coverage
+
+after_success:
+  - make coveralls
