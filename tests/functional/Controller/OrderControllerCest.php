@@ -195,7 +195,9 @@ class OrderControllerCest
     public function tryPayImpossible(FunctionalTester $I): void
     {
         $httpServiceMock = Stub::make(HttpService::class, [
-            'checkTsItPossibleToPay' => false
+            'checkTsItPossibleToPay' => function() {
+                throw new Exception('');
+            }
         ]);
         $I->addServiceToContainer(HttpService::class, $httpServiceMock);
 

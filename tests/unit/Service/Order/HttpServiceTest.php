@@ -2,23 +2,13 @@
 
 namespace Model;
 
-use App\Exception\Order\OrderNotFoundDomainException;
-use App\Model;
-use App\Entity;
-use App\Service\Auth\FakeIdentity;
 use App\Service\Order\HttpService;
-use App\Service\Order\OrderService;
-use App\Service\Product\ProductService;
 use Codeception\Test\Unit;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use Http\Client\Exception\HttpException;
-use Http\Client\Exception\RequestException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use ReflectionMethod;
 use UnitTester;
 use Http\Mock\Client as HttpMockClient;
 

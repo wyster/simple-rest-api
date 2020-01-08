@@ -4,7 +4,6 @@ namespace App\Service\Order;
 
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 

@@ -10,7 +10,6 @@ use App\Exception\Order\OrderPayImPossibleDomainException;
 use App\Model;
 use App\Service\Auth\IdentityInterface;
 use App\Service\Product\ProductService;
-use Psr\Http\Client\ClientExceptionInterface;
 use Throwable;
 
 class OrderService
