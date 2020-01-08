@@ -2,6 +2,7 @@
 
 namespace App\Service\Order;
 
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -10,6 +11,10 @@ use Psr\Http\Message\RequestFactoryInterface;
 class HttpService
 {
     /**
+     * @var string
+     */
+    private string $url;
+    /**
      * @var ClientInterface
      */
     private ClientInterface $httpClient;
@@ -17,26 +22,23 @@ class HttpService
      * @var RequestFactoryInterface
      */
     private RequestFactoryInterface $requestFactory;
-    /**
-     * @var string
-     */
-    private string $url;
 
     public function __construct(string $url, ClientInterface $httpClient, RequestFactoryInterface $requestFactory)
     {
+        $this->url = $url;
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
-        $this->url = $url;
     }
 
     /**
-     * @return bool
-     * @throws ClientExceptionInterface
+     * @throws Exception
      */
-    public function checkTsItPossibleToPay(): bool
+    public function checkTsItPossibleToPay(): void
     {
         $request = $this->requestFactory->createRequest('GET', $this->url);
         $response = $this->httpClient->sendRequest($request);
-        return $response->getStatusCode() === StatusCodeInterface::STATUS_OK;
+        if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
+            throw new Exception('Invalid response status');
+        }
     }
 }

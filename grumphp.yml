@@ -26,5 +26,6 @@ parameters:
             - test
         - scopes: []
     phpstan: ~
+    composer: ~
   extensions:
     - Wearejust\GrumPHPExtra\Extension\Loader

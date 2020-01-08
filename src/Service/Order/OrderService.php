@@ -11,6 +11,7 @@ use App\Model;
 use App\Service\Auth\IdentityInterface;
 use App\Service\Product\ProductService;
 use Psr\Http\Client\ClientExceptionInterface;
+use Throwable;
 
 class OrderService
 {
@@ -52,11 +53,12 @@ class OrderService
     private function isItPossibleToPay(): bool
     {
         try {
-            return $this->httpService->checkTsItPossibleToPay();
-        } catch (ClientExceptionInterface $e) {
+            $this->httpService->checkTsItPossibleToPay();
+        } catch (Throwable $e) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     public function pay(Entity\OrderPay $orderPay): void
