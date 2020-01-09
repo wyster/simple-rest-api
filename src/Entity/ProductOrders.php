@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class ProductOrders extends AbstractEntity
+final class ProductOrders extends AbstractEntity
 {
     /**
      * @var null|int

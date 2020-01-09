@@ -19,7 +19,7 @@ use RuntimeException;
  * Адаптированная версия
  * @see \Middlewares\RequestHandler
  */
-class RequestHandler implements MiddlewareInterface
+final class RequestHandler implements MiddlewareInterface
 {
     /**
      * @var Container|ContainerInterface

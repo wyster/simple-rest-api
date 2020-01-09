@@ -6,7 +6,7 @@ use App\Exception\CommonProblemDetailsExceptionTrait;
 use DomainException;
 use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
-class OrderRequestInvalidDomainException extends DomainException implements ProblemDetailsExceptionInterface
+final class OrderRequestInvalidDomainException extends DomainException implements ProblemDetailsExceptionInterface
 {
     use CommonProblemDetailsExceptionTrait;
 

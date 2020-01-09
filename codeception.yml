@@ -12,3 +12,4 @@ coverage:
   enabled: true
   include:
     - src/*
+bootstrap: ../config/tests-bootstrap.php

@@ -12,7 +12,7 @@ use App\Entity;
 use App\Validator;
 use Laminas\Hydrator\HydratorInterface;
 
-class OrderController
+final class OrderController
 {
     public function createAction(
         ServerRequestInterface $request,

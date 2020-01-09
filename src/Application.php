@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 use Laminas\HttpHandlerRunner\RequestHandlerRunner;
 use Laminas\Stratigility\MiddlewarePipeInterface;
 
-class Application
+final class Application
 {
     /**
      * @var ContainerInterface

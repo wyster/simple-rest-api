@@ -7,7 +7,7 @@ use Laminas\Validator;
 use App\Model;
 use App\Entity;
 
-class OrderPay extends AbstractValidator
+final class OrderPay extends AbstractValidator
 {
     /**
      * @var Model\Order

@@ -5,7 +5,7 @@ namespace App\Validator;
 use Laminas\Validator;
 use App\Model;
 
-class Order extends AbstractValidator
+final class Order extends AbstractValidator
 {
     public function __construct(Model\Product $modelOrder)
     {

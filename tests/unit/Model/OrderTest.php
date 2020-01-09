@@ -12,7 +12,7 @@ use UnitTester;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 
-class OrderTest extends Unit
+final class OrderTest extends Unit
 {
     /**
      * @var UnitTester

@@ -12,7 +12,7 @@ use Codeception\Lib\Connector\Application as ApplicationConnector;
 use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 
-class Application extends Framework
+final class Application extends Framework
 {
     /**
      * @var \App\Application

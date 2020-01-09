@@ -11,7 +11,7 @@ use App\Validator;
 use App\Entity;
 use App\Model;
 
-class OrderTest extends Unit
+final class OrderTest extends Unit
 {
     /**
      * @var UnitTester

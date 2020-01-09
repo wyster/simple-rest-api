@@ -7,7 +7,7 @@ use App\Service\Auth\FakeIdentity;
 use Exception;
 use Phinx\Seed\AbstractSeed;
 
-class Orders extends AbstractSeed
+final class Orders extends AbstractSeed
 {
     public function getDependencies()
     {

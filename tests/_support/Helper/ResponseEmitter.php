@@ -5,7 +5,7 @@ namespace Helper;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-class ResponseEmitter implements EmitterInterface
+final class ResponseEmitter implements EmitterInterface
 {
     /**
      * @var ResponseInterface

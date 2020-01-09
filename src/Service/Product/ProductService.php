@@ -7,7 +7,7 @@ use App\Model;
 use Money\Currency;
 use Money\Money;
 
-class ProductService
+final class ProductService
 {
     /**
      * @var Model\Product

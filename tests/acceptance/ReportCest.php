@@ -2,7 +2,7 @@
 
 use Fig\Http\Message\StatusCodeInterface;
 
-class ReportCest
+final class ReportCest
 {
     public function tryReport(AcceptanceTester $I): void
     {

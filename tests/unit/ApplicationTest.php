@@ -1,11 +1,10 @@
-<?php
-
+<?php declare(strict_types=1);
 
 use App\Application;
 use Codeception\Test\Unit;
 use Psr\Container\ContainerInterface;
 
-class ApplicationTest extends Unit
+final class ApplicationTest extends Unit
 {
     /**
      * @var UnitTester

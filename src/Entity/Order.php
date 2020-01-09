@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Enum\Status;
 
-class Order extends AbstractEntity
+final class Order extends AbstractEntity
 {
     /**
      * @var null|int

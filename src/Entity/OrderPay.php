@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Money\Money;
 
-class OrderPay
+final class OrderPay
 {
     /**
      * @var null|int

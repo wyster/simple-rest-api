@@ -14,7 +14,7 @@ use Laminas\HttpHandlerRunner\Emitter;
 use Laminas\HttpHandlerRunner\RequestHandlerRunner;
 use Laminas\Stratigility\MiddlewarePipeInterface;
 
-class Application extends Client
+final class Application extends Client
 {
     use PhpSuperGlobalsConverter;
 

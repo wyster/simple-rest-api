@@ -11,7 +11,7 @@ use Money\Money;
 
 use FunctionalTester;
 
-class ProductControllerCest
+final class ProductControllerCest
 {
     public function tryFetchAll(FunctionalTester $I): void
     {

@@ -23,7 +23,7 @@ use Money\Currency;
 use Money\Money;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
-class OrderControllerCest
+final class OrderControllerCest
 {
     public function tryCreate(FunctionalTester $I): void
     {
@@ -195,7 +195,7 @@ class OrderControllerCest
     public function tryPayImpossible(FunctionalTester $I): void
     {
         $httpServiceMock = Stub::make(HttpService::class, [
-            'checkTsItPossibleToPay' => function() {
+            'checkTsItPossibleToPay' => function () {
                 throw new Exception('');
             }
         ]);

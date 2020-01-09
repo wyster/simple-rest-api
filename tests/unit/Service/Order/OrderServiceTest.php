@@ -15,7 +15,7 @@ use Psr\Http\Message\RequestInterface;
 use ReflectionMethod;
 use UnitTester;
 
-class OrderServiceTest extends Unit
+final class OrderServiceTest extends Unit
 {
     /**
      * @var UnitTester

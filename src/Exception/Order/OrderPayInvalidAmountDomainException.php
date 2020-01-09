@@ -6,7 +6,7 @@ use App\Exception\CommonProblemDetailsExceptionTrait;
 use DomainException;
 use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
-class OrderPayInvalidAmountDomainException extends DomainException implements ProblemDetailsExceptionInterface
+final class OrderPayInvalidAmountDomainException extends DomainException implements ProblemDetailsExceptionInterface
 {
     use CommonProblemDetailsExceptionTrait;
 

@@ -5,7 +5,7 @@ namespace App\Db\Migrations;
 use Phinx\Db\Adapter\AdapterInterface;
 use Phinx\Migration\AbstractMigration;
 
-class OrderTable extends AbstractMigration
+final class OrderTable extends AbstractMigration
 {
     public function change(): void
     {

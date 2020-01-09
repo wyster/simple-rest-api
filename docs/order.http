@@ -1,4 +1,4 @@
-PUT http://{{host}}/order
+PUT http://{{host}}/order?XDEBUG_SESSION_START=1
 Content-Type: application/json
 
 {

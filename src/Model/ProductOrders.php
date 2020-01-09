@@ -6,7 +6,7 @@ use App\Entity\ProductOrders as Entity;
 use App\Exception\Order\ProductOrdersNotCreatedDomainException;
 use Exception;
 
-class ProductOrders extends AbstractModel
+final class ProductOrders extends AbstractModel
 {
     public function create(Entity $entity): void
     {

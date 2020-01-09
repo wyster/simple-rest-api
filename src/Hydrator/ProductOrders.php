@@ -6,7 +6,7 @@ use App\Entity\ProductOrders as ProductOrdersEntity;
 use Laminas\Hydrator\ClassMethodsHydrator;
 use Laminas\Hydrator\HydratorInterface;
 
-class ProductOrders implements HydratorInterface
+final class ProductOrders implements HydratorInterface
 {
     /**
      * @var HydratorInterface|null

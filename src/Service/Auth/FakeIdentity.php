@@ -2,7 +2,7 @@
 
 namespace App\Service\Auth;
 
-class FakeIdentity implements IdentityInterface
+final class FakeIdentity implements IdentityInterface
 {
     /**
      * @return int

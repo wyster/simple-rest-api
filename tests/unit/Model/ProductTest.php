@@ -14,7 +14,7 @@ use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use App\Hydrator;
 
-class ProductTest extends Unit
+final class ProductTest extends Unit
 {
     /**
      * @var UnitTester

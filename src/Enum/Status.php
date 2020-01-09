@@ -4,7 +4,7 @@ namespace App\Enum;
 
 use MyCLabs\Enum\Enum;
 
-class Status extends Enum
+final class Status extends Enum
 {
     private const UNKNOWN = 0;
     private const NEW = 1;

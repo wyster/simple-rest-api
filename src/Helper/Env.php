@@ -2,7 +2,7 @@
 
 namespace App\Helper;
 
-class Env
+final class Env
 {
     public const TESTING = 'testing';
     public const PRODUCTION = 'production';

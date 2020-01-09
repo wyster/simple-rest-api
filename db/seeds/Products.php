@@ -5,7 +5,7 @@ namespace App\Db\Seeds;
 use Faker\Factory as Faker;
 use Phinx\Seed\AbstractSeed;
 
-class Products extends AbstractSeed
+final class Products extends AbstractSeed
 {
     public function run(): void
     {

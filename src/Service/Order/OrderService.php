@@ -12,7 +12,7 @@ use App\Service\Auth\IdentityInterface;
 use App\Service\Product\ProductService;
 use Throwable;
 
-class OrderService
+final class OrderService
 {
     /**
      * @var Model\Order

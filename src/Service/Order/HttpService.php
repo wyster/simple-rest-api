@@ -7,7 +7,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
-class HttpService
+final class HttpService
 {
     /**
      * @var string

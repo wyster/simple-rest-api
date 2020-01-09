@@ -15,7 +15,7 @@ use Laminas\Authentication\AuthenticationService;
 use Laminas\Authentication\AuthenticationServiceInterface;
 use Laminas\Diactoros\Response;
 
-class IdentityHandler implements MiddlewareInterface
+final class IdentityHandler implements MiddlewareInterface
 {
     /**
      * @var ContainerInterface

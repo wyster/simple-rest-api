@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\Response;
 use App\Model;
 
-class ProductController
+final class ProductController
 {
     public function fetchAllAction(RequestInterface $request, Model\Product $model): ResponseInterface
     {

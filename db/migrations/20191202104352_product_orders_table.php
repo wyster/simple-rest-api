@@ -5,7 +5,7 @@ namespace App\Db\Migrations;
 use Phinx\Db\Adapter\AdapterInterface;
 use Phinx\Migration\AbstractMigration;
 
-class ProductOrdersTable extends AbstractMigration
+final class ProductOrdersTable extends AbstractMigration
 {
     public function change(): void
     {

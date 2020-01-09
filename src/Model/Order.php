@@ -7,7 +7,7 @@ use App\Exception\Order\OrderNotCreatedDomainException;
 use Exception;
 use Laminas\Db\ResultSet\HydratingResultSet;
 
-class Order extends AbstractModel
+final class Order extends AbstractModel
 {
     /**
      * @param int $id

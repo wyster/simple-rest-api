@@ -9,7 +9,7 @@ use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\Sql\Expression;
 use Laminas\Db\Sql\Sql;
 
-class Product extends AbstractModel
+final class Product extends AbstractModel
 {
     public function getAll(): HydratingResultSet
     {

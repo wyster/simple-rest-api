@@ -9,7 +9,7 @@ use Laminas\Hydrator\ClassMethodsHydrator;
 use Laminas\Hydrator\HydratorInterface;
 use Laminas\Hydrator\Strategy\ClosureStrategy;
 
-class Product implements HydratorInterface
+final class Product implements HydratorInterface
 {
     /**
      * @var HydratorInterface|null

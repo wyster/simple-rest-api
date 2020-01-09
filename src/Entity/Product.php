@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Money\Money;
 
-class Product extends AbstractEntity
+final class Product extends AbstractEntity
 {
     /**
      * @var null|int

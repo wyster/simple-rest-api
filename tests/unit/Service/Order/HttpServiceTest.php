@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use UnitTester;
 use Http\Mock\Client as HttpMockClient;
 
-class HttpServiceTest extends Unit
+final class HttpServiceTest extends Unit
 {
     /**
      * @var UnitTester
