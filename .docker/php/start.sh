@@ -1,5 +1,7 @@
 #!/bin/bash
 
+printenv >> /etc/environment
+
 if [ $COMPOSER_INSTALL == "1" ]; then
     composer global require hirak/prestissimo
     composer install --prefer-dist --no-progress --no-suggest
