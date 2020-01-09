@@ -4,25 +4,25 @@ use App\Helper\Env;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
-use Zend\Db\Adapter\AdapterInterface as DbAdapterInterface;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Db\Sql\TableIdentifier;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Diactoros\RequestFactory;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\ServerRequestFactory;
-use Zend\HttpHandlerRunner\RequestHandlerRunner;
-use Zend\Hydrator\Aggregate\AggregateHydrator;
-use Zend\Hydrator\HydratorInterface;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
-use Zend\Stratigility\MiddlewarePipe;
-use Zend\HttpHandlerRunner\Emitter;
-use Zend\Stratigility\MiddlewarePipeInterface;
+use Laminas\Db\Adapter\AdapterInterface as DbAdapterInterface;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\Sql\TableIdentifier;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Diactoros\RequestFactory;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\HttpHandlerRunner\RequestHandlerRunner;
+use Laminas\Hydrator\Aggregate\AggregateHydrator;
+use Laminas\Hydrator\HydratorInterface;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use Laminas\Stratigility\MiddlewarePipe;
+use Laminas\HttpHandlerRunner\Emitter;
+use Laminas\Stratigility\MiddlewarePipeInterface;
 use App\Model;
 use App\Entity;
 use App\Service;
-use Zend\Db\TableGateway\Feature;
-use Zend\Authentication;
+use Laminas\Db\TableGateway\Feature;
+use Laminas\Authentication;
 
 return [
     MiddlewarePipeInterface::class => DI\create(MiddlewarePipe::class),
@@ -51,7 +51,7 @@ return [
         return new App\Middleware\RequestHandler($c);
     },
     DbAdapterInterface::class => static function (ContainerInterface $c) {
-        return new Zend\Db\Adapter\Adapter([
+        return new Laminas\Db\Adapter\Adapter([
             'driver' => 'Pdo_' . getenv('DB_CONNECTION'),
             'host' => getenv('DB_HOST'),
             'database' => getenv('DB_NAME'),

@@ -10,7 +10,7 @@ use DI\Container;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Connector\Application as ApplicationConnector;
 use Psr\Container\ContainerInterface;
-use Zend\Db\Adapter\AdapterInterface;
+use Laminas\Db\Adapter\AdapterInterface;
 
 class Application extends Framework
 {

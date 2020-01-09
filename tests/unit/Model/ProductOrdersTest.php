@@ -8,8 +8,8 @@ use App\Entity;
 use App\Hydrator;
 use Codeception\Test\Unit;
 use UnitTester;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\TableGateway\TableGateway;
 
 class ProductOrdersTest extends Unit
 {

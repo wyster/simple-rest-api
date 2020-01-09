@@ -3,7 +3,7 @@
 namespace App\Validator;
 
 use App\Service\Auth\IdentityInterface;
-use Zend\Validator;
+use Laminas\Validator;
 use App\Model;
 use App\Entity;
 

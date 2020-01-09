@@ -3,8 +3,8 @@
 namespace App;
 
 use Psr\Container\ContainerInterface;
-use Zend\HttpHandlerRunner\RequestHandlerRunner;
-use Zend\Stratigility\MiddlewarePipeInterface;
+use Laminas\HttpHandlerRunner\RequestHandlerRunner;
+use Laminas\Stratigility\MiddlewarePipeInterface;
 
 class Application
 {

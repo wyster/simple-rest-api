@@ -10,10 +10,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Authentication\Adapter\AbstractAdapter;
-use Zend\Authentication\AuthenticationService;
-use Zend\Authentication\AuthenticationServiceInterface;
-use Zend\Diactoros\Response;
+use Laminas\Authentication\Adapter\AbstractAdapter;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Authentication\AuthenticationServiceInterface;
+use Laminas\Diactoros\Response;
 
 class IdentityHandler implements MiddlewareInterface
 {

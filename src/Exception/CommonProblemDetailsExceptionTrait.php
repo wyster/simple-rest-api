@@ -4,7 +4,7 @@ namespace App\Exception;
 
 use App\Helper\Env;
 use Throwable;
-use Zend\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait as ZendCommonProblemDetailsExceptionTrait;
+use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait as ZendCommonProblemDetailsExceptionTrait;
 
 trait CommonProblemDetailsExceptionTrait
 {
@@ -30,7 +30,7 @@ trait CommonProblemDetailsExceptionTrait
     }
 
     /**
-     * @see \Zend\ProblemDetails\ProblemDetailsResponseFactory::createThrowableDetail
+     * @see \Mezzio\ProblemDetails\ProblemDetailsResponseFactory::createThrowableDetail
      *
      * @return array
      */

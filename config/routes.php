@@ -12,7 +12,7 @@ return static function (RouteCollector $r) {
         'GET',
         '/',
         function () {
-            return new Zend\Diactoros\Response\TextResponse('Hello world!');
+            return new Laminas\Diactoros\Response\TextResponse('Hello world!');
         }
     );
     $r->addRoute(
@@ -33,7 +33,7 @@ return static function (RouteCollector $r) {
 
     if (Env::isTesting()) {
         $r->addRoute(['GET', 'POST'], '/c3/{name:.+}', function () {
-            return (new Zend\Diactoros\Response())->withStatus(StatusCodeInterface::STATUS_OK);
+            return (new Laminas\Diactoros\Response())->withStatus(StatusCodeInterface::STATUS_OK);
         });
     }
 };

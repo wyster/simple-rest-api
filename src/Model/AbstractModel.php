@@ -3,10 +3,10 @@
 namespace App\Model;
 
 use Exception;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\TableGateway\TableGatewayInterface;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGatewayInterface;
+use Laminas\Hydrator\HydratorInterface;
 
 abstract class AbstractModel
 {

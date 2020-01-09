@@ -3,7 +3,7 @@
 namespace Helper;
 
 use Psr\Http\Message\ResponseInterface;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 class ResponseEmitter implements EmitterInterface
 {

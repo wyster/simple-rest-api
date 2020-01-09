@@ -6,8 +6,8 @@ use App\Middleware\IdentityHandler;
 use App\Middleware\RequestHandler;
 use Middlewares\FastRoute;
 use Middlewares\JsonPayload;
-use Zend\ProblemDetails\ProblemDetailsMiddleware;
-use Zend\ProblemDetails\ProblemDetailsNotFoundHandler;
+use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
+use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler;
 
 return [
     ProblemDetailsMiddleware::class,

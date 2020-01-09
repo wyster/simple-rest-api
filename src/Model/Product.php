@@ -5,9 +5,9 @@ namespace App\Model;
 use App\Entity\Product as Entity;
 use App\Exception\Order\ProductNotCreatedDomainException;
 use Exception;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Db\Sql\Expression;
-use Zend\Db\Sql\Sql;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\Sql\Expression;
+use Laminas\Db\Sql\Sql;
 
 class Product extends AbstractModel
 {

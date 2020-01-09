@@ -21,7 +21,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use FunctionalTester;
 use Money\Currency;
 use Money\Money;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class OrderControllerCest
 {

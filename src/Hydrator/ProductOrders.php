@@ -3,8 +3,8 @@
 namespace App\Hydrator;
 
 use App\Entity\ProductOrders as ProductOrdersEntity;
-use Zend\Hydrator\ClassMethodsHydrator;
-use Zend\Hydrator\HydratorInterface;
+use Laminas\Hydrator\ClassMethodsHydrator;
+use Laminas\Hydrator\HydratorInterface;
 
 class ProductOrders implements HydratorInterface
 {

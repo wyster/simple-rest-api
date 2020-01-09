@@ -10,8 +10,8 @@ use Faker\Factory as Faker;
 use Money\Currency;
 use Money\Money;
 use UnitTester;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\TableGateway\TableGateway;
 use App\Hydrator;
 
 class ProductTest extends Unit

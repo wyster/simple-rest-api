@@ -5,7 +5,7 @@ namespace App\Model;
 use App\Entity\Order as Entity;
 use App\Exception\Order\OrderNotCreatedDomainException;
 use Exception;
-use Zend\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\ResultSet\HydratingResultSet;
 
 class Order extends AbstractModel
 {

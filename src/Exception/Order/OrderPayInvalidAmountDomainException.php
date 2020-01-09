@@ -4,7 +4,7 @@ namespace App\Exception\Order;
 
 use App\Exception\CommonProblemDetailsExceptionTrait;
 use DomainException;
-use Zend\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
+use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
 class OrderPayInvalidAmountDomainException extends DomainException implements ProblemDetailsExceptionInterface
 {

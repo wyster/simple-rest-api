@@ -4,9 +4,9 @@ namespace App\Hydrator;
 
 use App\Entity\Order as OrderEntity;
 use App\Enum\Status;
-use Zend\Hydrator\ClassMethodsHydrator;
-use Zend\Hydrator\HydratorInterface;
-use Zend\Hydrator\Strategy\ClosureStrategy;
+use Laminas\Hydrator\ClassMethodsHydrator;
+use Laminas\Hydrator\HydratorInterface;
+use Laminas\Hydrator\Strategy\ClosureStrategy;
 
 class Order implements HydratorInterface
 {

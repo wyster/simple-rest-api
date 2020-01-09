@@ -8,11 +8,11 @@ use Symfony\Component\BrowserKit\AbstractBrowser as Client;
 use Symfony\Component\BrowserKit\Response;
 use Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;
 use Throwable;
-use Zend\Diactoros\ServerRequestFactory;
-use Zend\Diactoros\Stream;
-use Zend\HttpHandlerRunner\Emitter;
-use Zend\HttpHandlerRunner\RequestHandlerRunner;
-use Zend\Stratigility\MiddlewarePipeInterface;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\Stream;
+use Laminas\HttpHandlerRunner\Emitter;
+use Laminas\HttpHandlerRunner\RequestHandlerRunner;
+use Laminas\Stratigility\MiddlewarePipeInterface;
 
 class Application extends Client
 {

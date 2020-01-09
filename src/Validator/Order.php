@@ -2,7 +2,7 @@
 
 namespace App\Validator;
 
-use Zend\Validator;
+use Laminas\Validator;
 use App\Model;
 
 class Order extends AbstractValidator

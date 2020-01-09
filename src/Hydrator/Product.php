@@ -5,9 +5,9 @@ namespace App\Hydrator;
 use App\Entity\Product as ProductEntity;
 use Money\Currency;
 use Money\Money;
-use Zend\Hydrator\ClassMethodsHydrator;
-use Zend\Hydrator\HydratorInterface;
-use Zend\Hydrator\Strategy\ClosureStrategy;
+use Laminas\Hydrator\ClassMethodsHydrator;
+use Laminas\Hydrator\HydratorInterface;
+use Laminas\Hydrator\Strategy\ClosureStrategy;
 
 class Product implements HydratorInterface
 {
