@@ -9,7 +9,7 @@ if [ $ENABLE_XDEBUG == "1" ]; then
     docker-php-ext-enable xdebug
 fi
 
-chmod 0775 tests/_output -R
+chmod 0777 ./tests/_output -R
 
 ./vendor/bin/phinx migrate
 
