@@ -1,5 +1,3 @@
--include .env
-
 help:
 	@echo ""
 	@echo "usage: make COMMAND"

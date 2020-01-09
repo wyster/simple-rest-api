@@ -20,6 +20,7 @@ script:
   - echo "COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN" >> .env
   - echo "CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER" >> .env
   - echo "CI_BRANCH=$TRAVIS_BRANCH" >> .env
+  - cat .env
   - cd $TRAVIS_BUILD_DIR/.docker/tests
   - make coverage
 
