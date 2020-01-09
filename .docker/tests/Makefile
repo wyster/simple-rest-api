@@ -17,6 +17,7 @@ up: setup build
 	@docker-compose up -d
 	@docker-compose exec -T web bash /wait-for.sh localhost:80 -t 0 -- echo "Webserver started"
 	@docker-compose exec -T php ./vendor/bin/phinx migrate
+	@docker-compose exec -T php ./vendor/bin/codecept build
 
 build: setup
 	@docker-compose build

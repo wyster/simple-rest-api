@@ -31,6 +31,7 @@ final class Application extends Framework
 
     public function _initialize(): void
     {
+        \DG\BypassFinals::enable();
         $this->bootstrapFile = Configuration::projectDir() . $this->config['bootstrap'];
         if (!file_exists($this->bootstrapFile)) {
             throw new ModuleConfigException(

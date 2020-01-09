@@ -1,3 +1,0 @@
-<?php
-
-DG\BypassFinals::enable();
