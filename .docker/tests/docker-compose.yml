@@ -7,7 +7,7 @@ services:
       - db
       - web
     env_file:
-      - ./.env
+      - ../.env
       - ./.env.tests
     volumes:
       - ../php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
@@ -18,7 +18,7 @@ services:
     volumes:
       - ./data/db:/var/lib/postgresql/data
     env_file:
-      - ./.env
+      - ../.env
   web:
     build: ../nginx
     volumes:
@@ -26,7 +26,7 @@ services:
       - ../..:/var/www/html
     restart: on-failure
     env_file:
-      - ./.env
+      - ../.env
     networks:
       default:
         aliases:

@@ -36,7 +36,6 @@ logs:
 
 setup:
 	@cd .. && make setup
-	@ln -sf $(PWD)/../.env $(PWD)/.env
 	@cp -n docker-compose.override.example.yml docker-compose.override.yml
 
 run: up
@@ -45,7 +44,7 @@ run: up
 coverage: up
 	@docker-compose exec -T php ./vendor/bin/codecept run --coverage --coverage-xml
 
-coveralls:
+coveralls: up
 	@docker-compose exec -T php mkdir -p ./build/logs
 	@docker-compose exec -T php ./vendor/bin/php-coveralls -v --coverage_clover=./tests/_output/coverage.xml
 
